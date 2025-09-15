@@ -7,7 +7,7 @@ const TelegramMiniApp = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState({https://github.com/Salarlotfi1381/my-mini-app/blob/main/telegram_miniapp_interface%20(1).tsx
     username: 'محمد_احمدی',
     uid: 'UID123456789',
     totalReferrals: 7,
