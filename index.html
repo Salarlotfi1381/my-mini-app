@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>داشبورد رفرال</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap');
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .main-container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .spinner {
+            border-top-color: #6366f1; /* indigo-500 */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- =========== Verification Screen =========== -->
+    <div id="verification-screen" class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 text-white p-6 no-select">
+        <div class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 text-center max-w-sm w-full">
+            <div class="text-6xl mb-6 animate-bounce">🤖</div>
+            <h2 class="text-2xl font-bold mb-4">احراز هویت انسانی</h2>
+            <p class="mb-8 text-white/90">برای ادامه، دکمه زیر را برای ۴ ثانیه نگه دارید</p>
+            
+            <div class="relative mb-6">
+                <div class="w-32 h-32 mx-auto relative">
+                    <svg class="w-32 h-32 transform -rotate-90">
+                        <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white/30" />
+                        <circle id="progress-circle" cx="64" cy="64" r="56" stroke="currentColor" stroke-width="8" fill="transparent" stroke-linecap="round" class="text-green-400 transition-all duration-100" style="stroke-dasharray: 352; stroke-dashoffset: 352;"></circle>
+                    </svg>
+                    <button id="hold-button" class="absolute inset-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full shadow-lg active:scale-95 transition-transform flex items-center justify-center text-4xl">
+                        <span id="hold-icon">👆</span>
+                    </button>
+                </div>
+                <div id="progress-text" class="mt-4 text-lg font-semibold">0/4 ثانیه</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Loading Screen for Data Fetch =========== -->
+    <div id="loading-data-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6">
+        <div class="spinner w-12 h-12 border-4 border-gray-300 rounded-full mb-4"></div>
+        <p class="font-semibold">در حال بارگذاری اطلاعات...</p>
+    </div>
+    
+    <!-- =========== Error Screen =========== -->
+    <div id="error-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6 text-center">
+        <div class="text-5xl mb-4">😢</div>
+        <h2 class="text-xl font-bold mb-2">خطا در بارگذاری</h2>
+        <p id="error-message" class="text-gray-600">متاسفانه مشکلی در دریافت اطلاعات شما پیش آمد.</p>
+        <button id="retry-button" class="mt-6 bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg">تلاش مجدد</button>
+    </div>
+
+    <!-- =========== Main App (Hidden by default) =========== -->
+    <div id="main-app" class="main-container bg-gray-100 min-h-screen hidden">
+        <!-- Main Content Area -->
+        <div class="pb-24">
+            <!-- Home Tab Content -->
+            <div id="home-tab" class="p-4 space-y-4">
+                <!-- Welcome Card -->
+                <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl p-5 shadow-lg">
+                    <h2 class="text-2xl font-bold mb-1">سلام <span id="home-username"></span>! 👋</h2>
+                    <p class="opacity-90 text-sm">به ربات رفرال ما خوش آمدید</p>
+                </div>
+
+                <!-- Stats Grid & other cards... -->
+                 <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl p-4 shadow">
+                        <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><circle cx="12" cy="8" r="4"/><path d="M5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg><span class="font-semibold">پاداش دریافتی</span></div>
+                        <div class="text-3xl font-bold">$<span id="home-bonus">0</span></div>
+                        <div class="text-sm opacity-90">بونوس فیوچرز</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 text-white rounded-xl p-4 shadow">
+                        <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="font-semibold">رفرال‌های شما</span></div>
+                        <div class="text-3xl font-bold" id="home-referrals">0</div>
+                        <div class="text-sm opacity-90"><span id="home-needed-referrals">10</span> تا برای پاداش</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-3">پیشرفت تا پاداش بعدی</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-2"><div id="home-progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: 0%;"></div></div>
+                    <div class="flex justify-between text-xs text-gray-600"><span><span id="home-progress-text">0</span> از 10</span><span>+1$ پاداش</span></div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-3">آخرین دعوت‌شدگان</h3>
+                    <div id="recent-referrals-list" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Referral Tab Content (Hidden by default) -->
+            <div id="referral-tab" class="p-4 space-y-4 hidden">
+                 <!-- Cards for referral tab -->
+                 <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-5 shadow-lg">
+                    <h2 class="text-xl font-bold mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>لینک اختصاصی شما</h2>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 mb-3">
+                        <div class="text-xs mb-1 opacity-80">لینک دعوت:</div>
+                        <div class="flex items-center gap-2">
+                            <div id="referral-link-text" class="flex-1 bg-white/30 rounded-lg p-2 text-xs font-mono break-all"></div>
+                            <button id="copy-button" class="bg-white/30 hover:bg-white/40 p-2 rounded-lg transition-colors"></button>
+                        </div>
+                    </div>
+                    <p class="text-center text-xs opacity-90">هر ۱۰ دعوت = ۱ دلار پاداش</p>
+                </div>
+                 <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-4">آمار دعوت‌های شما</h3>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div><div class="text-2xl font-bold text-blue-600" id="stats-total">0</div><div class="text-xs text-gray-600">کل دعوت‌ها</div></div>
+                        <div><div class="text-2xl font-bold text-green-600" id="stats-verified">0</div><div class="text-xs text-gray-600">تایید شده</div></div>
+                        <div><div class="text-2xl font-bold text-yellow-600" id="stats-pending">0</div><div class="text-xs text-gray-600">در انتظار</div></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-3">کاربران دعوت‌شده</h3>
+                    <div id="full-referrals-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Profile Tab Content (Hidden by default) -->
+            <div id="profile-tab" class="p-4 space-y-4 hidden">
+                <!-- Cards for profile tab -->
+                <div class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl p-6 text-center shadow-lg">
+                    <div class="w-20 h-20 bg-white/30 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                    <h2 class="text-xl font-bold" id="profile-username"></h2>
+                    <p class="opacity-90 mt-1 text-sm">UID: <span id="profile-uid"></span></p>
+                </div>
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-3">آمار حساب شما</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg"><span class="text-gray-700 text-sm">کل رفرال‌ها</span><span class="font-bold text-blue-600" id="profile-total-referrals"></span></div>
+                        <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg"><span class="text-gray-700 text-sm">پاداش دریافتی</span><span class="font-bold text-green-600">$<span id="profile-total-bonus"></span></span></div>
+                        <div class="flex justify-between items-center p-3 bg-purple-50 rounded-lg"><span class="text-gray-700 text-sm">وضعیت حساب</span><span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">فعال ✅</span></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                    <h3 class="font-bold text-gray-800 mb-4">برداشت پاداش</h3>
+                    <div id="withdrawal-section"></div>
+                </div>
+                <div class="bg-white rounded-xl p-5 shadow-lg">
+                     <h3 class="font-bold text-gray-800 mb-3">عملیات</h3>
+                     <div class="space-y-2">
+                        <button class="w-full text-right p-3 hover:bg-gray-100 rounded-lg transition-colors text-sm text-gray-700">❓ راهنما و پشتیبانی</button>
+                        <button class="w-full text-right p-3 hover:bg-red-50 rounded-lg transition-colors text-sm text-red-600">🚪 خروج از حساب</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Menu -->
+        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/80 backdrop-blur-sm border-t border-gray-200 px-4 pt-2 pb-4">
+            <div id="nav-menu" class="flex justify-around">
+                <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-20 text-blue-600 bg-blue-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="text-xs">خانه</span></button>
+                <button data-tab="referral" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-20 text-gray-600 hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-xs">رفرال</span></button>
+                <button data-tab="profile" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-20 text-gray-600 hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="text-xs">پروفایل</span></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-gray-900 text-white py-2 px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300">لینک کپی شد!</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Telegram Web App Setup ---
+    const tg = window.Telegram?.WebApp || {
+        // Mock object for testing in browser
+        initDataUnsafe: { user: { id: 123456, first_name: "کاربر تستی" } },
+        ready: () => {}, expand: () => {}, setHeaderColor: () => {},
+        showAlert: (message) => alert(message),
+        initData: 'mock_init_data'
+    };
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#f3f4f6');
+
+    // --- DOM Elements ---
+    const verificationScreen = document.getElementById('verification-screen');
+    const loadingDataScreen = document.getElementById('loading-data-screen');
+    const mainApp = document.getElementById('main-app');
+    const errorScreen = document.getElementById('error-screen');
+    const errorMessage = document.getElementById('error-message');
+    const retryButton = document.getElementById('retry-button');
+    const holdButton = document.getElementById('hold-button');
+    const progressCircle = document.getElementById('progress-circle');
+    const progressText = document.getElementById('progress-text');
+    const holdIcon = document.getElementById('hold-icon');
+    const navMenu = document.getElementById('nav-menu');
+    const tabs = {
+        home: document.getElementById('home-tab'),
+        referral: document.getElementById('referral-tab'),
+        profile: document.getElementById('profile-tab'),
+    };
+    const copyButton = document.getElementById('copy-button');
+    const toast = document.getElementById('toast');
+
+    // --- State ---
+    let isHolding = false, holdProgress = 0, holdInterval;
+    const TOTAL_HOLD_TIME = 4000, INTERVAL_TIME = 50;
+    const PROGRESS_INCREMENT = (INTERVAL_TIME / TOTAL_HOLD_TIME) * 100;
+    let currentData = {};
+
+    // --- Function Declarations ---
+    function showError(message) {
+        verificationScreen.classList.add('hidden');
+        loadingDataScreen.style.display = 'none';
+        mainApp.classList.add('hidden');
+
+        errorMessage.textContent = message;
+        errorScreen.style.display = 'flex';
+    }
+    
+    async function fetchUserData() {
+        // !!! مهم: این آدرس را با آدرس عمومی سرور خود جایگزین کنید !!!
+        const BACKEND_URL = 'http://127.0.0.1:8000/get_user_data'; // مثال: http://your-server-ip:8000/get_user_data
+
+        if (!tg.initData || tg.initData === 'mock_init_data') {
+            showError('اطلاعات کاربر برای اعتبارسنجی یافت نشد. لطفاً ربات را مجدداً راه‌اندازی کنید.');
+            return null;
+        }
+
+        try {
+            const response = await fetch(BACKEND_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ initData: tg.initData })
+            });
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error("Fetch error:", error);
+            showError("مشکلی در ارتباط با سرور پیش آمد. لطفاً دوباره تلاش کنید.");
+            return null;
+        }
+    }
+
+    const populateData = (data) => {
+        currentData = data;
+        const { username, uid, totalReferrals, bonusEarned, referredUsers } = data;
+        const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
+        
+        // Home tab
+        document.getElementById('home-username').textContent = username;
+        document.getElementById('home-bonus').textContent = bonusEarned;
+        document.getElementById('home-referrals').textContent = totalReferrals;
+        const neededForBonusHome = 10 - (totalReferrals % 10);
+        document.getElementById('home-needed-referrals').textContent = neededForBonusHome === 10 && totalReferrals > 0 ? 0 : neededForBonusHome;
+        const progressPercent = (totalReferrals % 10) * 10;
+        document.getElementById('home-progress-bar').style.width = `${progressPercent}%`;
+        document.getElementById('home-progress-text').textContent = totalReferrals % 10;
+        
+        const recentList = document.getElementById('recent-referrals-list');
+        recentList.innerHTML = '';
+        if (referredUsers.length > 0) {
+            referredUsers.slice(0, 3).forEach(user => {
+                recentList.innerHTML += createReferralItem(user, 'small');
+            });
+        } else {
+            recentList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کسی را دعوت نکرده‌اید.</p>`;
+        }
+        
+        // Referral tab
+        document.getElementById('referral-link-text').textContent = referralLink;
+        copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+        const verifiedCount = referredUsers.filter(u => u.verified).length;
+        document.getElementById('stats-total').textContent = totalReferrals;
+        document.getElementById('stats-verified').textContent = verifiedCount;
+        document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
+
+        const fullList = document.getElementById('full-referrals-list');
+        fullList.innerHTML = '';
+        if (referredUsers.length > 0) {
+            referredUsers.forEach(user => {
+                fullList.innerHTML += createReferralItem(user, 'large');
+            });
+        } else {
+             fullList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کاربری را دعوت نکرده‌اید.</p>`;
+        }
+
+        // Profile tab
+        document.getElementById('profile-username').textContent = username;
+        document.getElementById('profile-uid').textContent = uid;
+        document.getElementById('profile-total-referrals').textContent = totalReferrals;
+        document.getElementById('profile-total-bonus').textContent = bonusEarned;
+
+        const withdrawalSection = document.getElementById('withdrawal-section');
+        if (bonusEarned > 0) {
+            withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
+        } else {
+            const neededForFirstBonus = 10 - (totalReferrals % 10);
+            withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${neededForFirstBonus} دعوت تا اولین پاداش</p></div>`;
+        }
+    };
+
+    const createReferralItem = (user, type) => {
+        const verifiedBadge = user.verified ? `<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">تایید شده</span>` : `<span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">در انتظار</span>`;
+        const verifiedIcon = user.verified ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-green-500"><polyline points="20 6 9 17 4 12"/></svg>` : `<div class="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>`;
+        const avatarInitial = user.name.charAt(0) || '?';
+        const avatarColor = `bg-gradient-to-br from-cyan-500 to-blue-500`;
+
+        if (type === 'small') { return `<div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg"><div class="flex items-center"><div class="w-10 h-10 ${avatarColor} rounded-full flex items-center justify-center text-white font-bold text-sm">${avatarInitial}</div><div class="mr-3"><div class="font-semibold text-gray-800 text-sm">${user.name}</div><div class="text-xs text-gray-500">${user.joinDate}</div></div></div>${verifiedIcon}</div>`; } 
+        else { return `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"><div class="flex items-center"><div class="w-11 h-11 ${avatarColor} rounded-full flex items-center justify-center text-white font-bold">${avatarInitial}</div><div class="mr-3"><div class="font-semibold text-gray-800">${user.name}</div><div class="text-sm text-gray-500">عضویت: ${user.joinDate}</div></div></div><div class="flex items-center gap-2">${verifiedBadge}</div></div>`; }
+    };
+    
+    const verifyUser = () => {
+        holdIcon.textContent = '✅';
+        setTimeout(async () => {
+            verificationScreen.classList.add('hidden');
+            loadingDataScreen.style.display = 'flex';
+            
+            const userData = await fetchUserData();
+
+            loadingDataScreen.style.display = 'none';
+            if (userData) {
+                populateData(userData);
+                mainApp.classList.remove('hidden');
+            }
+        }, 500);
+    };
+
+    const startHolding = () => {
+        if (isHolding) return;
+        isHolding = true;
+        holdInterval = setInterval(() => {
+            holdProgress += PROGRESS_INCREMENT;
+            updateProgressUI();
+            if (holdProgress >= 100) {
+                clearInterval(holdInterval);
+                verifyUser();
+            }
+        }, INTERVAL_TIME);
+    };
+
+    const stopHolding = () => {
+        isHolding = false;
+        clearInterval(holdInterval);
+        if (holdProgress < 100) {
+            holdProgress = 0;
+            updateProgressUI();
+        }
+    };
+    
+    const updateProgressUI = () => {
+        const progress = Math.min(holdProgress, 100);
+        const radius = 56;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (progress / 100) * circumference;
+        progressCircle.style.strokeDashoffset = offset;
+        const seconds = Math.floor((progress / 100) * (TOTAL_HOLD_TIME / 1000));
+        progressText.textContent = `${seconds}/4 ثانیه`;
+    };
+
+    // --- Event Listeners ---
+    holdButton.addEventListener('mousedown', startHolding);
+    holdButton.addEventListener('mouseup', stopHolding);
+    holdButton.addEventListener('mouseleave', stopHolding);
+    holdButton.addEventListener('touchstart', (e) => { e.preventDefault(); startHolding(); }, { passive: false });
+    holdButton.addEventListener('touchend', (e) => { e.preventDefault(); stopHolding(); });
+
+    retryButton.addEventListener('click', () => {
+        errorScreen.style.display = 'none';
+        loadingDataScreen.style.display = 'flex';
+        // Re-run the verification and fetch process without the hold button
+        setTimeout(async () => {
+            const userData = await fetchUserData();
+            loadingDataScreen.style.display = 'none';
+            if (userData) {
+                populateData(userData);
+                mainApp.classList.remove('hidden');
+            }
+        }, 500);
+    });
+
+    navMenu.addEventListener('click', (e) => {
+        const button = e.target.closest('.nav-button');
+        if (!button) return;
+        const tabToActivate = button.dataset.tab;
+        navMenu.querySelectorAll('.nav-button').forEach(btn => { btn.classList.remove('text-blue-600', 'bg-blue-50'); btn.classList.add('text-gray-600', 'hover:text-blue-600'); });
+        Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
+        button.classList.add('text-blue-600', 'bg-blue-50');
+        button.classList.remove('text-gray-600', 'hover:text-blue-600');
+        tabs[tabToActivate].classList.remove('hidden');
+    });
+
+    copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(`https://t.me/cointestpashabot?start=${currentData.uid}`).then(() => {
+            copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-white"><polyline points="20 6 9 17 4 12"/></svg>`;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+            }, 2000);
+        });
+    });
+});
+</script>
+</body>
+</html>
+
