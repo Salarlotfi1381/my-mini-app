@@ -264,59 +264,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const populateData = (data) => {
         currentData = data;
-        const { username, uid, totalReferrals, bonusEarned, referredUsers } = data;
-        const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
+        // <<< اصلاح شده: دریافت bonusThreshold و bonusAmount از بک‌اند
+        const { username, uid, totalReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount } = data;
+        const referralLink = `https://t.me/cointestpashabot?start=${uid}`; // << نام کاربری ربات خود را اینجا بگذارید
         
-        // Home tab
+        // --- Home Tab ---
         document.getElementById('home-username').textContent = username;
-        document.getElementById('home-bonus').textContent = bonusEarned;
+        document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
         document.getElementById('home-referrals').textContent = totalReferrals;
-        const neededForBonusHome = 10 - (totalReferrals % 10);
-        document.getElementById('home-needed-referrals').textContent = neededForBonusHome === 10 && totalReferrals > 0 ? 0 : neededForBonusHome;
-        const progressPercent = (totalReferrals % 10) * 10;
-        document.getElementById('home-progress-bar').style.width = `${progressPercent}%`;
-        document.getElementById('home-progress-text').textContent = totalReferrals % 10;
+        
+        // <<< اصلاح شده: استفاده از bonusThreshold برای محاسبات
+        const currentProgress = totalReferrals % bonusThreshold;
+        const needed = bonusThreshold - currentProgress;
+        
+        document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && totalReferrals > 0) ? 0 : needed;
+        document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
+        
+        // <<< اصلاح شده: به‌روزرسانی کامل متن پیشرفت
+        const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
+        homeProgressTextContainer.innerHTML = `<span><span id="home-progress-text">${currentProgress}</span> از ${bonusThreshold}</span><span id="home-bonus-amount-text">+${bonusAmount}$ پاداش</span>`;
         
         const recentList = document.getElementById('recent-referrals-list');
         recentList.innerHTML = '';
-        if (referredUsers.length > 0) {
-            referredUsers.slice(0, 3).forEach(user => {
-                recentList.innerHTML += createReferralItem(user, 'small');
-            });
+        if (referredUsers && referredUsers.length > 0) {
+            referredUsers.slice(0, 3).forEach(user => { recentList.innerHTML += createReferralItem(user, 'small'); });
         } else {
             recentList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کسی را دعوت نکرده‌اید.</p>`;
         }
         
-        // Referral tab
+        // --- Referral Tab ---
         document.getElementById('referral-link-text').textContent = referralLink;
         copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-        const verifiedCount = referredUsers.filter(u => u.verified).length;
+        const verifiedCount = (referredUsers || []).filter(u => u.verified).length;
         document.getElementById('stats-total').textContent = totalReferrals;
         document.getElementById('stats-verified').textContent = verifiedCount;
         document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
+        
+        // <<< اصلاح شده: نمایش پویای قانون پاداش
+        document.querySelector('#referral-tab .text-center').textContent = `هر ${bonusThreshold} دعوت = ${bonusAmount} دلار پاداش`;
 
         const fullList = document.getElementById('full-referrals-list');
         fullList.innerHTML = '';
-        if (referredUsers.length > 0) {
-            referredUsers.forEach(user => {
-                fullList.innerHTML += createReferralItem(user, 'large');
-            });
+        if (referredUsers && referredUsers.length > 0) {
+            referredUsers.forEach(user => { fullList.innerHTML += createReferralItem(user, 'large'); });
         } else {
              fullList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کاربری را دعوت نکرده‌اید.</p>`;
         }
 
-        // Profile tab
+        // --- Profile Tab ---
         document.getElementById('profile-username').textContent = username;
         document.getElementById('profile-uid').textContent = uid;
         document.getElementById('profile-total-referrals').textContent = totalReferrals;
-        document.getElementById('profile-total-bonus').textContent = bonusEarned;
+        document.getElementById('profile-total-bonus').textContent = bonusEarned.toFixed(2);
 
         const withdrawalSection = document.getElementById('withdrawal-section');
         if (bonusEarned > 0) {
-            withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
+            withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned.toFixed(2)}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
         } else {
-            const neededForFirstBonus = 10 - (totalReferrals % 10);
-            withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${neededForFirstBonus} دعوت تا اولین پاداش</p></div>`;
+            // <<< اصلاح شده: استفاده از 'needed' برای نمایش تعداد دعوت‌های باقی‌مانده
+            withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${needed} دعوت تا اولین پاداش</p></div>`;
         }
     };
 
@@ -424,4 +430,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
