@@ -264,23 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const populateData = (data) => {
         currentData = data;
-        // <<< اصلاح شده: دریافت bonusThreshold و bonusAmount از بک‌اند
         const { username, uid, totalReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount } = data;
-        const referralLink = `https://t.me/cointestpashabot?start=${uid}`; // << نام کاربری ربات خود را اینجا بگذارید
+        const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
         
         // --- Home Tab ---
         document.getElementById('home-username').textContent = username;
         document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
         document.getElementById('home-referrals').textContent = totalReferrals;
         
-        // <<< اصلاح شده: استفاده از bonusThreshold برای محاسبات
         const currentProgress = totalReferrals % bonusThreshold;
         const needed = bonusThreshold - currentProgress;
         
         document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && totalReferrals > 0) ? 0 : needed;
         document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
         
-        // <<< اصلاح شده: به‌روزرسانی کامل متن پیشرفت
         const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
         homeProgressTextContainer.innerHTML = `<span><span id="home-progress-text">${currentProgress}</span> از ${bonusThreshold}</span><span id="home-bonus-amount-text">+${bonusAmount}$ پاداش</span>`;
         
@@ -299,8 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stats-total').textContent = totalReferrals;
         document.getElementById('stats-verified').textContent = verifiedCount;
         document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
-        
-        // <<< اصلاح شده: نمایش پویای قانون پاداش
         document.querySelector('#referral-tab .text-center').textContent = `هر ${bonusThreshold} دعوت = ${bonusAmount} دلار پاداش`;
 
         const fullList = document.getElementById('full-referrals-list');
@@ -321,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (bonusEarned > 0) {
             withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned.toFixed(2)}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
         } else {
-            // <<< اصلاح شده: استفاده از 'needed' برای نمایش تعداد دعوت‌های باقی‌مانده
             withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${needed} دعوت تا اولین پاداش</p></div>`;
         }
     };
