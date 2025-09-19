@@ -43,6 +43,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
+    <!-- =========== Verification Screen =========== -->
     <div id="verification-screen" class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 text-white p-6 no-select">
         <div class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 text-center max-w-sm w-full">
             <div class="text-6xl mb-6 animate-bounce">🤖</div>
@@ -64,11 +65,13 @@
         </div>
     </div>
 
+    <!-- =========== Loading Screen for Data Fetch =========== -->
     <div id="loading-data-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6">
         <div class="spinner w-12 h-12 border-4 border-gray-300 rounded-full mb-4"></div>
         <p class="font-semibold">در حال بارگذاری اطلاعات...</p>
     </div>
     
+    <!-- =========== Error Screen =========== -->
     <div id="error-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6 text-center">
         <div class="text-5xl mb-4">😢</div>
         <h2 class="text-xl font-bold mb-2">خطا در بارگذاری</h2>
@@ -76,15 +79,29 @@
         <button id="retry-button" class="mt-6 bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg">تلاش مجدد</button>
     </div>
 
+    <!-- =========== Main App (Hidden by default) =========== -->
     <div id="main-app" class="main-container bg-gray-100 min-h-screen hidden">
+        <!-- Main Content Area -->
         <div class="pb-24">
+            <!-- Home Tab Content -->
             <div id="home-tab" class="p-4 space-y-4">
+                <!-- Welcome Card -->
                 <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl p-5 shadow-lg">
-                    <h2 class="text-2xl font-bold mb-1">سلام <span id="home-username"></span>! 👋</h2>
-                    <p class="opacity-90 text-sm">به ربات رفرال ما خوش آمدید</p>
+                    <!-- MODIFIED: Flex container for avatar and text -->
+                    <div class="flex items-center gap-4">
+                        <!-- NEW: Profile Picture Element -->
+                        <div id="home-avatar" class="w-14 h-14 bg-white/30 rounded-full flex-shrink-0 flex items-center justify-center text-xl font-bold">
+                            <!-- This will be filled by JS -->
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">سلام <span id="home-username"></span>! 👋</h2>
+                            <p class="opacity-90 text-sm">به ربات رفرال ما خوش آمدید</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <!-- Stats Grid & other cards... -->
+                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl p-4 shadow">
                         <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><circle cx="12" cy="8" r="4"/><path d="M5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg><span class="font-semibold">پاداش دریافتی</span></div>
                         <div class="text-3xl font-bold">$<span id="home-bonus">0</span></div>
@@ -109,6 +126,7 @@
                 </div>
             </div>
 
+            <!-- Referral Tab Content (Hidden by default) -->
             <div id="referral-tab" class="p-4 space-y-4 hidden">
                  <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-5 shadow-lg">
                     <h2 class="text-xl font-bold mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>لینک اختصاصی شما</h2>
@@ -135,6 +153,7 @@
                 </div>
             </div>
 
+            <!-- Profile Tab Content (Hidden by default) -->
             <div id="profile-tab" class="p-4 space-y-4 hidden">
                 <div class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl p-6 text-center shadow-lg">
                     <div class="w-20 h-20 bg-white/30 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -163,6 +182,7 @@
             </div>
         </div>
 
+        <!-- Bottom Navigation Menu -->
         <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/80 backdrop-blur-sm border-t border-gray-200 px-4 pt-2 pb-4">
             <div id="nav-menu" class="flex justify-around">
                 <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-20 text-blue-600 bg-blue-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="text-xs">خانه</span></button>
@@ -172,6 +192,7 @@
         </div>
     </div>
     
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-gray-900 text-white py-2 px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300">لینک کپی شد!</div>
 
 <script>
@@ -179,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Telegram Web App Setup ---
     const tg = window.Telegram?.WebApp || {
         // Mock object for testing in browser
-        initDataUnsafe: { user: { id: 123456, first_name: "کاربر تستی" } },
+        initDataUnsafe: { user: { id: 123456, first_name: "کاربر تستی", photo_url: "https://placehold.co/128x128/7e22ce/ffffff?text=T" } },
         ready: () => {}, expand: () => {}, setHeaderColor: () => {},
         showAlert: (message) => alert(message),
         initData: 'mock_init_data'
@@ -219,14 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
         verificationScreen.classList.add('hidden');
         loadingDataScreen.style.display = 'none';
         mainApp.classList.add('hidden');
-
         errorMessage.textContent = message;
         errorScreen.style.display = 'flex';
     }
     
     async function fetchUserData() {
-        // !!! مهم: این آدرس را با آدرس عمومی سرور خود جایگزین کنید !!!
-        const BACKEND_URL = 'https://bcebbdb800b5.ngrok-free.app/get_user_data'; // مثال: http://your-server-ip:8000/get_user_data
+        const BACKEND_URL = 'https://bcebbdb800b5.ngrok-free.app/get_user_data';
 
         if (!tg.initData || tg.initData === 'mock_init_data') {
             showError('اطلاعات کاربر برای اعتبارسنجی یافت نشد. لطفاً ربات را مجدداً راه‌اندازی کنید.');
@@ -250,21 +269,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const populateData = (data) => {
         currentData = data;
-        const { username, uid, totalReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount } = data;
+        // NEW: Destructure photoUrl from the data object
+        // The backend must send this field, extracted from tg.initDataUnsafe.user.photo_url
+        const { username, uid, totalReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl } = data;
         const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
         
-        // =======================  تغییر اصلی اینجاست =======================
-        // ۱. تعداد کاربران تایید شده را محاسبه می‌کنیم
         const verifiedCount = (referredUsers || []).filter(u => u.verified).length;
 
-        // --- Home Tab (مبتنی بر کاربران تایید شده) ---
+        // --- Home Tab ---
         document.getElementById('home-username').textContent = username;
+
+        // NEW: Populate the avatar
+        const avatarContainer = document.getElementById('home-avatar');
+        if (photoUrl) {
+            // If a photo URL exists, use it as a background image
+            avatarContainer.innerHTML = ''; // Clear any initials
+            avatarContainer.style.backgroundImage = `url(${photoUrl})`;
+            avatarContainer.style.backgroundSize = 'cover';
+            avatarContainer.style.backgroundPosition = 'center';
+        } else {
+            // Otherwise, show the first initial as a fallback
+            avatarContainer.style.backgroundImage = 'none';
+            avatarContainer.textContent = username.charAt(0).toUpperCase() || '?';
+        }
+
         document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
-        
-        // ۲. نمایش تعداد رفرال‌های "تایید شده" در کارت اصلی
         document.getElementById('home-referrals').textContent = verifiedCount;
         
-        // ۳. محاسبه پیشرفت فقط بر اساس کاربران "تایید شده"
         const currentProgress = verifiedCount % bonusThreshold;
         const needed = bonusThreshold - currentProgress;
         
@@ -282,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             recentList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کسی را دعوت نکرده‌اید.</p>`;
         }
         
-        // --- Referral Tab (این بخش آمار کلی را نشان می‌دهد و دست نخورده باقی می‌ماند) ---
+        // --- Referral Tab ---
         document.getElementById('referral-link-text').textContent = referralLink;
         copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
         document.getElementById('stats-total').textContent = totalReferrals;
@@ -308,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (bonusEarned > 0) {
             withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned.toFixed(2)}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
         } else {
-            // ۴. متن راهنما هم از متغیر `needed` اصلاح شده استفاده می‌کند
             withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${needed} دعوت تایید شده تا اولین پاداش</p></div>`;
         }
     };
@@ -421,3 +451,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
