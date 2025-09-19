@@ -43,7 +43,6 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <!-- =========== Verification Screen =========== -->
     <div id="verification-screen" class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 text-white p-6 no-select">
         <div class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 text-center max-w-sm w-full">
             <div class="text-6xl mb-6 animate-bounce">🤖</div>
@@ -65,13 +64,11 @@
         </div>
     </div>
 
-    <!-- =========== Loading Screen for Data Fetch =========== -->
     <div id="loading-data-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6">
         <div class="spinner w-12 h-12 border-4 border-gray-300 rounded-full mb-4"></div>
         <p class="font-semibold">در حال بارگذاری اطلاعات...</p>
     </div>
     
-    <!-- =========== Error Screen =========== -->
     <div id="error-screen" class="hidden flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800 p-6 text-center">
         <div class="text-5xl mb-4">😢</div>
         <h2 class="text-xl font-bold mb-2">خطا در بارگذاری</h2>
@@ -79,27 +76,22 @@
         <button id="retry-button" class="mt-6 bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg">تلاش مجدد</button>
     </div>
 
-    <!-- =========== Main App (Hidden by default) =========== -->
     <div id="main-app" class="main-container bg-gray-100 min-h-screen hidden">
-        <!-- Main Content Area -->
         <div class="pb-24">
-            <!-- Home Tab Content -->
             <div id="home-tab" class="p-4 space-y-4">
-                <!-- Welcome Card -->
                 <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl p-5 shadow-lg">
                     <h2 class="text-2xl font-bold mb-1">سلام <span id="home-username"></span>! 👋</h2>
                     <p class="opacity-90 text-sm">به ربات رفرال ما خوش آمدید</p>
                 </div>
 
-                <!-- Stats Grid & other cards... -->
-                 <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl p-4 shadow">
                         <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><circle cx="12" cy="8" r="4"/><path d="M5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg><span class="font-semibold">پاداش دریافتی</span></div>
                         <div class="text-3xl font-bold">$<span id="home-bonus">0</span></div>
                         <div class="text-sm opacity-90">بونوس فیوچرز</div>
                     </div>
                     <div class="bg-gradient-to-br from-green-400 to-green-600 text-white rounded-xl p-4 shadow">
-                        <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="font-semibold">رفرال‌های شما</span></div>
+                        <div class="flex items-center mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="font-semibold">رفرال‌های تایید شده</span></div>
                         <div class="text-3xl font-bold" id="home-referrals">0</div>
                         <div class="text-sm opacity-90"><span id="home-needed-referrals">10</span> تا برای پاداش</div>
                     </div>
@@ -117,9 +109,7 @@
                 </div>
             </div>
 
-            <!-- Referral Tab Content (Hidden by default) -->
             <div id="referral-tab" class="p-4 space-y-4 hidden">
-                 <!-- Cards for referral tab -->
                  <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-5 shadow-lg">
                     <h2 class="text-xl font-bold mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>لینک اختصاصی شما</h2>
                     <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 mb-3">
@@ -129,7 +119,7 @@
                             <button id="copy-button" class="bg-white/30 hover:bg-white/40 p-2 rounded-lg transition-colors"></button>
                         </div>
                     </div>
-                    <p class="text-center text-xs opacity-90">هر ۱۰ دعوت = ۱ دلار پاداش</p>
+                    <p class="text-center text-xs opacity-90">هر ۱۰ دعوت تایید شده = ۱ دلار پاداش</p>
                 </div>
                  <div class="bg-white rounded-xl p-5 shadow-lg">
                     <h3 class="font-bold text-gray-800 mb-4">آمار دعوت‌های شما</h3>
@@ -145,9 +135,7 @@
                 </div>
             </div>
 
-            <!-- Profile Tab Content (Hidden by default) -->
             <div id="profile-tab" class="p-4 space-y-4 hidden">
-                <!-- Cards for profile tab -->
                 <div class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl p-6 text-center shadow-lg">
                     <div class="w-20 h-20 bg-white/30 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                     <h2 class="text-xl font-bold" id="profile-username"></h2>
@@ -168,14 +156,13 @@
                 <div class="bg-white rounded-xl p-5 shadow-lg">
                      <h3 class="font-bold text-gray-800 mb-3">عملیات</h3>
                      <div class="space-y-2">
-                        <button class="w-full text-right p-3 hover:bg-gray-100 rounded-lg transition-colors text-sm text-gray-700">❓ راهنما و پشتیبانی</button>
-                        <button class="w-full text-right p-3 hover:bg-red-50 rounded-lg transition-colors text-sm text-red-600">🚪 خروج از حساب</button>
+                         <button class="w-full text-right p-3 hover:bg-gray-100 rounded-lg transition-colors text-sm text-gray-700">❓ راهنما و پشتیبانی</button>
+                         <button class="w-full text-right p-3 hover:bg-red-50 rounded-lg transition-colors text-sm text-red-600">🚪 خروج از حساب</button>
                      </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Menu -->
         <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/80 backdrop-blur-sm border-t border-gray-200 px-4 pt-2 pb-4">
             <div id="nav-menu" class="flex justify-around">
                 <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-20 text-blue-600 bg-blue-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="text-xs">خانه</span></button>
@@ -185,7 +172,6 @@
         </div>
     </div>
     
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-gray-900 text-white py-2 px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300">لینک کپی شد!</div>
 
 <script>
@@ -267,15 +253,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const { username, uid, totalReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount } = data;
         const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
         
-        // --- Home Tab ---
+        // =======================  تغییر اصلی اینجاست =======================
+        // ۱. تعداد کاربران تایید شده را محاسبه می‌کنیم
+        const verifiedCount = (referredUsers || []).filter(u => u.verified).length;
+
+        // --- Home Tab (مبتنی بر کاربران تایید شده) ---
         document.getElementById('home-username').textContent = username;
         document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
-        document.getElementById('home-referrals').textContent = totalReferrals;
         
-        const currentProgress = totalReferrals % bonusThreshold;
+        // ۲. نمایش تعداد رفرال‌های "تایید شده" در کارت اصلی
+        document.getElementById('home-referrals').textContent = verifiedCount;
+        
+        // ۳. محاسبه پیشرفت فقط بر اساس کاربران "تایید شده"
+        const currentProgress = verifiedCount % bonusThreshold;
         const needed = bonusThreshold - currentProgress;
         
-        document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && totalReferrals > 0) ? 0 : needed;
+        document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
         document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
         
         const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
@@ -289,14 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
             recentList.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">هنوز کسی را دعوت نکرده‌اید.</p>`;
         }
         
-        // --- Referral Tab ---
+        // --- Referral Tab (این بخش آمار کلی را نشان می‌دهد و دست نخورده باقی می‌ماند) ---
         document.getElementById('referral-link-text').textContent = referralLink;
         copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-        const verifiedCount = (referredUsers || []).filter(u => u.verified).length;
         document.getElementById('stats-total').textContent = totalReferrals;
         document.getElementById('stats-verified').textContent = verifiedCount;
         document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
-        document.querySelector('#referral-tab .text-center').textContent = `هر ${bonusThreshold} دعوت = ${bonusAmount} دلار پاداش`;
+        document.querySelector('#referral-tab .text-center').textContent = `هر ${bonusThreshold} دعوت تایید شده = ${bonusAmount} دلار پاداش`;
 
         const fullList = document.getElementById('full-referrals-list');
         fullList.innerHTML = '';
@@ -316,13 +308,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (bonusEarned > 0) {
             withdrawalSection.innerHTML = `<div class="space-y-4"><div class="bg-green-50 p-4 rounded-lg"><div class="text-center"><div class="text-3xl font-bold text-green-600">$${bonusEarned.toFixed(2)}</div><div class="text-sm text-gray-600 mt-1">قابل برداشت</div></div></div><button class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all">درخواست برداشت</button><p class="text-xs text-gray-500 text-center">برای برداشت، UID اکانت خود را ارسال کنید</p></div>`;
         } else {
-            withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${needed} دعوت تا اولین پاداش</p></div>`;
+            // ۴. متن راهنما هم از متغیر `needed` اصلاح شده استفاده می‌کند
+            withdrawalSection.innerHTML = `<div class="text-center py-6"><div class="text-5xl mb-4">💰</div><p class="text-gray-600 font-semibold">هنوز پاداشی برای برداشت ندارید</p><p class="text-sm text-gray-500 mt-2">${needed} دعوت تایید شده تا اولین پاداش</p></div>`;
         }
     };
-
-    // =================================================================
-    // ===========  کد کامل و اصلاح شده برای جایگزینی  ===========
-    // =================================================================
+    
     const createReferralItem = (user, type) => {
         const verifiedBadge = user.verified ? `<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">تایید شده</span>` : `<span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">در انتظار</span>`;
         const verifiedIcon = user.verified ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-green-500"><polyline points="20 6 9 17 4 12"/></svg>` : `<div class="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>`;
@@ -330,11 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const avatarColor = `bg-gradient-to-br from-cyan-500 to-blue-500`;
 
         if (type === 'small') { 
-            // این بخش برای لیست کوچک در تب "خانه" است
             return `<div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg"><div class="flex items-center"><div class="w-10 h-10 ${avatarColor} rounded-full flex items-center justify-center text-white font-bold text-sm">${avatarInitial}</div><div class="mr-3"><div class="font-semibold text-gray-800 text-sm">${user.name}</div><div class="text-xs text-gray-500">${user.joinDate}</div></div></div>${verifiedIcon}</div>`; 
         } 
         else { 
-            // این بخش برای لیست کامل در تب "رفرال" است که جا افتاده بود
             return `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"><div class="flex items-center"><div class="w-11 h-11 ${avatarColor} rounded-full flex items-center justify-center text-white font-bold">${avatarInitial}</div><div class="mr-3"><div class="font-semibold text-gray-800">${user.name}</div><div class="text-sm text-gray-500">عضویت: ${user.joinDate}</div></div></div><div class="flex items-center gap-2">${verifiedBadge}</div></div>`; 
         }
     };
