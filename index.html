@@ -514,17 +514,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Home Tab
         document.getElementById('home-username').textContent = username;
 
-        const avatarContainer = document.getElementById('home-avatar');
-        if (photoUrl) {
-            avatarContainer.innerHTML = '';
-            avatarContainer.style.backgroundImage = `url(${photoUrl})`;
-            avatarContainer.style.backgroundSize = 'cover';
-            avatarContainer.style.backgroundPosition = 'center';
-        } else {
-            avatarContainer.style.backgroundImage = 'none';
-            avatarContainer.textContent = username.charAt(0).toUpperCase() || '?';
-        }
-
+        const avatarContainers = [document.getElementById('home-avatar'), document.getElementById('profile-avatar')];
+        avatarContainers.forEach(container => {
+             if (container) {
+                 if (photoUrl) {
+                     container.innerHTML = '';
+                     container.style.backgroundImage = `url(${photoUrl})`;
+                     container.style.backgroundSize = 'cover';
+                     container.style.backgroundPosition = 'center';
+                 } else {
+                     container.style.backgroundImage = 'none';
+                     container.textContent = username.charAt(0).toUpperCase() || '?';
+                 }
+             }
+        });
+          
         document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
         document.getElementById('home-referrals').textContent = verifiedCount;
         
