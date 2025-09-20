@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     async function fetchUserData() {
-        const BACKEND_URL = 'https://20fe7d0c29d7.ngrok-free.app/get_user_data';
+        const BACKEND_URL = 'https://ded9cd986dc9.ngrok-free.app/get_user_data';
 
         if (!tg.initData || tg.initData === 'mock_init_data') {
             // Mock data for demo
@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function api(endpoint, options = {}) {
-        const BACKEND_URL = 'https://20fe7d0c29d7.ngrok-free.app';
+        const BACKEND_URL = 'https://ded9cd986dc9.ngrok-free.app';
         
         try {
             const response = await fetch(`${BACKEND_URL}/${endpoint}`, {
