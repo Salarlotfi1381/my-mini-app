@@ -667,26 +667,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function handleRequestWithdrawal(event) {
-        if (!confirm('Are you sure you want to request a withdrawal for the entire available balance?')) return;
-        
-        const button = event.currentTarget;
-        button.disabled = true;
-        button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
-
+    async function handleRequestWithdrawal(e) {
+        if (!confirm('Request withdrawal for the entire balance?')) return;
+        const btn = e.currentTarget;
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
         try {
             const result = await api('request_withdrawal');
-            showToast(result.message || 'Withdrawal request submitted!');
-            const updatedUserData = await fetchUserData();
-            if (updatedUserData) {
-                populateData(updatedUserData);
-            }
+            showToast(result.message);
+            // <<<< شروع اصلاح >>>>
+            const updatedData = await api('get_user_data');
+            // <<<< پایان اصلاح >>>>
+            if (updatedData) populateData(updatedData);
         } catch (error) {
-            button.disabled = false;
-            button.innerHTML = '<span>REQUEST WITHDRAWAL</span>';
+            btn.disabled = false;
+            btn.innerHTML = '<span>REQUEST WITHDRAWAL</span>';
         }
     }
-    
+
     const createReferralItem = (user, type) => {
         const verifiedBadge = user.verified ? 
             `<span class="text-xs bg-green-500/30 text-green-400 px-2 py-1 rounded-full border border-green-500/50 mono">ACTIVE</span>` : 
