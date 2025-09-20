@@ -675,9 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const result = await api('request_withdrawal');
             showToast(result.message);
-            // <<<< شروع اصلاح >>>>
             const updatedData = await api('get_user_data');
-            // <<<< پایان اصلاح >>>>
             if (updatedData) populateData(updatedData);
         } catch (error) {
             btn.disabled = false;
