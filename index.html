@@ -667,20 +667,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function api(endpoint, options = {}) {
+        const BACKEND_URL = 'https://20fe7d0c29d7.ngrok-free.app';
+        
+        try {
+            const response = await fetch(`${BACKEND_URL}/${endpoint}`, {
+                method: options.method || 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    initData: tg.initData, 
+                    ...options.body 
+                })
+            });
+            
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error(`API call failed for ${endpoint}:`, error);
+            showToast(`Connection failed: ${error.message}`, 'error');
+            throw error;
+        }
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.remove('opacity-0');
+        setTimeout(() => {
+            toast.classList.add('opacity-0');
+        }, 3000);
+    }
+
     async function handleRequestWithdrawal(e) {
-        // <<<< شروع اصلاح: خط confirm حذف شد >>>>
-        // if (!confirm('Request withdrawal for the entire balance?')) return;
         const btn = e.currentTarget;
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
+        
         try {
             const result = await api('request_withdrawal');
-            showToast(result.message);
+            showToast(result.message || 'Withdrawal request submitted successfully!');
             const updatedData = await api('get_user_data');
             if (updatedData) populateData(updatedData);
         } catch (error) {
             btn.disabled = false;
             btn.innerHTML = '<span>REQUEST WITHDRAWAL</span>';
+            showToast('Withdrawal request failed. Please try again.', 'error');
         }
     }
     const createReferralItem = (user) => {
