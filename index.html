@@ -695,62 +695,56 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderWithdrawalZone = (data) => {
-        const { bonusEarned, withdrawalThreshold = 5, withdrawalHistory = [], rewardUid, email } = data;
-        const requestView = document.getElementById('w-tab-request-view');
-        const historyView = document.getElementById('w-tab-history-view');
-        const hasAccountInfo = rewardUid && email;
-        const canWithdraw = bonusEarned >= withdrawalThreshold && hasAccountInfo;
+    const { bonusEarned, withdrawalThreshold = 5, withdrawalHistory = [], rewardUid, email } = data;
+    const requestView = document.getElementById('w-tab-request-view');
+    const historyView = document.getElementById('w-tab-history-view');
+    const hasAccountInfo = rewardUid && email;
+    const canWithdraw = bonusEarned >= withdrawalThreshold && hasAccountInfo;
 
-        let requestHtml = `
-            <div class="text-center mb-4">
-                <p class="text-xs text-gray-400 mono">CURRENT BALANCE</p>
-                <p class="text-3xl font-bold text-white mono">${bonusEarned.toFixed(2)}</p>
-            </div>
-            <div class="flex justify-center items-center space-x-2 mb-4">`;
-        
-        for (let i = 1; i <= withdrawalThreshold; i++) {
-            const filled = bonusEarned >= i;
-            requestHtml += `<div class="w-8 h-8 flex items-center justify-center rounded-lg ${filled ? 'matrix-glow' : 'bg-black border border-gray-700'}" style="${filled ? 'background-color: #01bc8d;' : ''}">
-                <span class="${filled ? 'text-white' : 'text-gray-500'} font-bold text-sm">${filled ? '✓' : '-'}</span>
-            </div>`;
-        }
+    let requestHtml = `
+        <div class="text-center mb-4">
+            <p class="text-xs text-gray-400 mono">CURRENT BALANCE</p>
+            <p class="text-3xl font-bold text-white mono">$${bonusEarned.toFixed(2)}</p>
+        </div>
+        <div class="text-center mb-4">
+            <p class="text-2xl font-bold mono" style="color: #01bc8d;">${bonusEarned.toFixed(2)}/${withdrawalThreshold.toFixed(2)}</p>
+            <p class="text-xs text-gray-400 mono mt-1">WITHDRAWAL PROGRESS</p>
+        </div>
+        <button id="request-withdrawal-btn" class="w-full text-white font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''} style="background: ${canWithdraw ? 'linear-gradient(to right, #01bc8d, #00a67a)' : 'linear-gradient(to right, #666, #555)'};">
+            <span>REQUEST WITHDRAWAL</span>
+        </button>`;
+    
+    if (!hasAccountInfo) {
+        requestHtml += `<p class="text-xs text-yellow-400 text-center mono mt-2">Please set your Exchange Account first.</p>`;
+    } else if (bonusEarned < withdrawalThreshold) {
+        requestHtml += `<p class="text-xs text-gray-400 text-center mono mt-2">$${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
+    }
+    
+    requestView.innerHTML = requestHtml;
+    if(canWithdraw) {
+        document.getElementById('request-withdrawal-btn').addEventListener('click', handleRequestWithdrawal);
+    }
 
-        requestHtml += `</div>
-            <button id="request-withdrawal-btn" class="w-full text-white font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''} style="background: ${canWithdraw ? 'linear-gradient(to right, #01bc8d, #00a67a)' : 'linear-gradient(to right, #666, #555)'};">
-                <span>REQUEST WITHDRAWAL</span>
-            </button>`;
-        
-        if (!hasAccountInfo) {
-            requestHtml += `<p class="text-xs text-yellow-400 text-center mono mt-2">Please set your Exchange Account first.</p>`;
-        } else if (bonusEarned < withdrawalThreshold) {
-            requestHtml += `<p class="text-xs text-gray-400 text-center mono mt-2">${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
-        }
-        
-        requestView.innerHTML = requestHtml;
-        if(canWithdraw) {
-            document.getElementById('request-withdrawal-btn').addEventListener('click', handleRequestWithdrawal);
-        }
-
-        if (withdrawalHistory && withdrawalHistory.length > 0) {
-            historyView.innerHTML = '<div class="space-y-2 max-h-60 overflow-y-auto">' + withdrawalHistory.map(item => {
-                const statusInfo = {
-                    'pending': { color: 'text-yellow-400', text: 'PENDING' },
-                    'approved': { color: 'text-green-400', text: 'APPROVED' },
-                    'rejected': { color: 'text-red-400', text: 'REJECTED' }
-                };
-                const currentStatus = statusInfo[item.status] || { color: 'text-gray-400', text: 'UNKNOWN' };
-                return `<div class="flex justify-between items-center p-3 bg-black rounded-lg border border-gray-700">
-                            <div>
-                                <p class="font-bold text-gray-300 mono">${parseFloat(item.amount).toFixed(2)}</p>
-                                <p class="text-xs text-gray-400 mono">${new Date(item.request_date).toLocaleDateString()}</p>
-                            </div>
-                            <p class="text-xs font-semibold mono ${currentStatus.color}">${currentStatus.text}</p>
-                        </div>`;
-            }).join('') + '</div>';
-        } else {
-            historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-gray-300 mono">NO HISTORY</p></div>`;
-        }
-    };
+    if (withdrawalHistory && withdrawalHistory.length > 0) {
+        historyView.innerHTML = '<div class="space-y-2 max-h-60 overflow-y-auto">' + withdrawalHistory.map(item => {
+            const statusInfo = {
+                'pending': { color: 'text-yellow-400', text: 'PENDING' },
+                'approved': { color: 'text-green-400', text: 'APPROVED' },
+                'rejected': { color: 'text-red-400', text: 'REJECTED' }
+            };
+            const currentStatus = statusInfo[item.status] || { color: 'text-gray-400', text: 'UNKNOWN' };
+            return `<div class="flex justify-between items-center p-3 bg-black rounded-lg border border-gray-700">
+                        <div>
+                            <p class="font-bold text-gray-300 mono">$${parseFloat(item.amount).toFixed(2)}</p>
+                            <p class="text-xs text-gray-400 mono">${new Date(item.request_date).toLocaleDateString()}</p>
+                        </div>
+                        <p class="text-xs font-semibold mono ${currentStatus.color}">${currentStatus.text}</p>
+                    </div>`;
+        }).join('') + '</div>';
+    } else {
+        historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-gray-300 mono">NO HISTORY</p></div>`;
+    }
+};
 
     async function handleSaveExchangeAccount(event) {
         const uid = document.getElementById('uid-input').value.trim();
