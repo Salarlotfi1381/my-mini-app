@@ -8,7 +8,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
+        
         :root {
             --matrix-green: #00ff41;
             --matrix-dark: #0d1117;
@@ -38,16 +38,16 @@
             min-height: 100vh;
             position: relative;
         }
-
+        
         .matrix-glow {
             box-shadow: 0 0 20px var(--matrix-green-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-
+        
         .matrix-border {
             border: 1px solid var(--matrix-green);
             box-shadow: 0 0 10px var(--matrix-green-glow);
         }
-
+        
         .glass-card {
             background: rgba(13, 17, 23, 0.8);
             backdrop-filter: blur(12px);
@@ -180,7 +180,7 @@
             <div class="text-5xl sm:text-6xl mb-6 animate-bounce">🔐</div>
             <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-400 mono">SYSTEM VERIFICATION</h2>
             <p class="mb-8 text-green-300 text-sm">Hold button for 4 seconds to authenticate</p>
-
+            
             <div class="relative mb-6">
                 <div class="w-28 h-28 sm:w-32 sm:h-32 mx-auto relative">
                     <svg class="w-full h-full transform -rotate-90">
@@ -204,7 +204,7 @@
             <div class="mt-2 text-sm text-green-300">Connecting to the grid...</div>
         </div>
     </div>
-
+    
     <!-- =========== Error Screen =========== -->
     <div id="error-screen" class="hidden flex-col items-center justify-center min-h-screen p-4 sm:p-6 text-center">
         <div class="glass-card rounded-2xl p-6 sm:p-8 text-center max-w-sm w-full matrix-glow">
@@ -331,7 +331,7 @@
             <div id="profile-tab" class="p-4 space-y-4 hidden">
                 <div class="glass-card rounded-2xl p-6 text-center shadow-lg matrix-glow hover-lift"><div id="profile-avatar" class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold matrix-border"></div><h2 class="text-xl font-bold text-green-400 mono" id="profile-username"></h2><p class="text-green-300/80 mt-1 text-sm">ID: <span id="profile-uid" class="mono"></span></p></div>
                 <div class="glass-card rounded-xl p-5 shadow-lg hover-lift"><h3 class="font-bold text-green-400 mb-3 mono">ACCOUNT STATS</h3><div class="space-y-3"><div class="flex justify-between items-center p-3 bg-green-900/20 rounded-lg border border-green-900/50"><span class="text-green-300 text-sm mono">Total Nodes</span><span class="font-bold text-green-400 mono" id="profile-total-referrals"></span></div><div class="flex justify-between items-center p-3 bg-green-900/20 rounded-lg border border-green-900/50"><span class="text-green-300 text-sm mono">Rewards</span><span class="font-bold text-green-400 mono">$<span id="profile-total-bonus"></span></span></div></div></div>
-
+                
                 <div class="glass-card rounded-xl p-5 shadow-lg hover-lift">
                     <h3 class="font-bold text-green-400 mb-4 mono">EXCHANGE ACCOUNT</h3>
                     <div id="exchange-account-content"></div>
@@ -368,7 +368,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Toast -->
     <div id="toast" class="fixed bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-600 to-green-700 text-black font-bold py-2 px-4 sm:px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300 mono text-sm">LINK COPIED!</div>
 
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createMatrixRain() {
         const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
         const matrixBg = document.getElementById('matrix-bg');
-
+        
         function addRain() {
             const rain = document.createElement('div');
             rain.className = 'matrix-rain';
@@ -387,10 +387,10 @@ document.addEventListener('DOMContentLoaded', () => {
             rain.style.opacity = Math.random() * 0.5 + 0.1;
             rain.textContent = chars[Math.floor(Math.random() * chars.length)];
             matrixBg.appendChild(rain);
-
+            
             setTimeout(() => rain.remove(), 5000);
         }
-
+        
         setInterval(addRain, 200);
     }
     createMatrixRain();
@@ -440,10 +440,9 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.textContent = message;
         errorScreen.style.display = 'flex';
     }
-
+    
     async function fetchUserData() {
         const BACKEND_URL = 'https://6aeaef64de90.ngrok-free.app/get_user_data';
-        const BACKEND_URL = 'https://7e4082d063ca.ngrok-free.app/get_user_data';
 
         if (!tg.initData || tg.initData === 'mock_init_data') {
             // Mock data for demo
@@ -483,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // در اینجا فیلدهای `rewardUid` و `email` اضافه شده‌اند
     const { username, uid, totalReferrals, verifiedReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl, rewardUid, email } = data;
     const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
-
+   
     const verifiedCount = verifiedReferrals;
 
     // Home Tab
@@ -503,19 +502,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
-
+    
     document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
     document.getElementById('home-referrals').textContent = verifiedCount;
-
+   
     const currentProgress = verifiedCount % bonusThreshold;
     const needed = bonusThreshold - currentProgress;
-
+   
     document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
     document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
-
+   
     const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
     homeProgressTextContainer.innerHTML = `<span class="mono"><span id="home-progress-text">${currentProgress}</span>/${bonusThreshold}</span><span class="text-green-400 font-semibold mono">+$${bonusAmount.toFixed(2)}</span>`;
-
+   
     const recentList = document.getElementById('recent-referrals-list');
     recentList.innerHTML = '';
     if (referredUsers && referredUsers.length > 0) {
@@ -523,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       recentList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-green-300/70 mono">NO CONNECTIONS YET</p><p class="text-xs text-green-300/50">Share your matrix link to begin</p></div>`;
     }
-
+   
     // Referral Tab
     document.getElementById('referral-link-text').textContent = referralLink;
     copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
@@ -550,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExchangeAccountZone(data);
     renderWithdrawalZone(data);
   };
-
+   
   const renderExchangeAccountZone = (data) => {
         const { rewardUid, email } = data;
         const exchangeAccountContent = document.getElementById('exchange-account-content');
@@ -600,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="text-3xl font-bold text-green-400 mono">$${bonusEarned.toFixed(2)}</p>
             </div>
             <div class="flex justify-center items-center space-x-2 mb-4">`;
-
+        
         for (let i = 1; i <= withdrawalThreshold; i++) {
             const filled = bonusEarned >= i;
             requestHtml += `<div class="w-8 h-8 flex items-center justify-center rounded-lg ${filled ? 'bg-green-500 matrix-glow' : 'bg-black/30 border border-green-900/50'}">
@@ -612,13 +611,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <button id="request-withdrawal-btn" class="w-full bg-gradient-to-r ${canWithdraw ? 'from-green-600 to-green-700' : 'from-gray-600 to-gray-700'} text-black font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''}>
                 <span>REQUEST WITHDRAWAL</span>
             </button>`;
-
+        
         if (!hasAccountInfo) {
             requestHtml += `<p class="text-xs text-yellow-400/80 text-center mono mt-2">Please set your Exchange Account first.</p>`;
         } else if (bonusEarned < withdrawalThreshold) {
             requestHtml += `<p class="text-xs text-green-300/70 text-center mono mt-2">$${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
         }
-
+        
         requestView.innerHTML = requestHtml;
         if(canWithdraw) {
             document.getElementById('request-withdrawal-btn').addEventListener('click', handleRequestWithdrawal);
@@ -654,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         button.disabled = true;
         button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
-
+        
         try {
             await api('save_exchange_account', { body: { uid, email } });
             showToast('Account information verified and saved!');
@@ -670,8 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function api(endpoint, options = {}) {
         const BACKEND_URL = 'https://6aeaef64de90.ngrok-free.app';
-        const BACKEND_URL = 'https://7e4082d063ca.ngrok-free.app';
-
+        
         try {
             const response = await fetch(`${BACKEND_URL}/${endpoint}`, {
                 method: options.method || 'POST',
@@ -681,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ...options.body 
                 })
             });
-
+            
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
             return await response.json();
         } catch (error) {
@@ -704,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.currentTarget;
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
-
+        
         try {
             const result = await api('request_withdrawal');
             showToast(result.message || 'Withdrawal request submitted successfully!');
@@ -725,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(async () => {
             verificationScreen.classList.add('hidden');
             loadingDataScreen.style.display = 'flex';
-
+            
             const userData = await fetchUserData();
 
             loadingDataScreen.style.display = 'none';
@@ -767,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('progress-text').textContent = `0/2 SEC`;
         }
     };
-
+    
     const updateProgressUI = () => {
         const progress = Math.min(holdProgress, 100);
         const radius = 50;
@@ -777,7 +775,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const seconds = Math.floor((progress / 100) * (TOTAL_HOLD_TIME / 1000));
         progressText.textContent = `${seconds}/4 SEC`;
     };
-
+    
 
     // Event Listeners
     holdButton.addEventListener('mousedown', startHolding);
@@ -795,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             tabBtn.classList.add('text-green-400', 'border-green-400');
             tabBtn.classList.remove('text-green-300/60', 'border-transparent');
-
+            
             document.getElementById('w-tab-request-view').classList.toggle('hidden', tabId !== 'request');
             document.getElementById('w-tab-history-view').classList.toggle('hidden', tabId !== 'history');
         }
@@ -820,13 +818,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const button = e.target.closest('.nav-button');
         if (!button) return;
         const tabToActivate = button.dataset.tab;
-
+        
         navMenu.querySelectorAll('.nav-button').forEach(btn => { 
             btn.classList.remove('text-green-400', 'bg-green-400/20'); 
             btn.classList.add('text-green-300/60', 'hover:text-green-400'); 
         });
         Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
-
+        
         button.classList.add('text-green-400', 'bg-green-400/20');
         button.classList.remove('text-green-300/60', 'hover:text-green-400');
         tabs[tabToActivate].classList.remove('hidden');
