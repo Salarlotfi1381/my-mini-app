@@ -505,27 +505,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Enhanced Matrix Rain Effect
+    // Matrix Rain Effect
     function createMatrixRain() {
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン$£¥€';
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
         const matrixBg = document.getElementById('matrix-bg');
         
         function addRain() {
-            if (document.querySelectorAll('.matrix-rain').length > 50) return;
-            
             const rain = document.createElement('div');
             rain.className = 'matrix-rain';
             rain.style.left = Math.random() * 100 + 'vw';
-            rain.style.animationDuration = (Math.random() * 4 + 3) + 's';
-            rain.style.opacity = Math.random() * 0.7 + 0.2;
-            rain.style.fontSize = (Math.random() * 8 + 10) + 'px';
+            rain.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            rain.style.opacity = Math.random() * 0.5 + 0.1;
             rain.textContent = chars[Math.floor(Math.random() * chars.length)];
             matrixBg.appendChild(rain);
             
-            setTimeout(() => rain.remove(), 7000);
+            setTimeout(() => rain.remove(), 5000);
         }
         
-        setInterval(addRain, 150);
+        setInterval(addRain, 200);
     }
     createMatrixRain();
 
@@ -538,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     tg.ready();
     tg.expand();
-    tg.setHeaderColor('#1a1a1a');
+    tg.setHeaderColor('#0d1117');
 
     // DOM Elements
     const verificationScreen = document.getElementById('verification-screen');
@@ -561,11 +558,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
 
     // State
-    let isHolding = false;
-    let holdProgress = 0;
-    let holdInterval = null;
-    const TOTAL_HOLD_TIME = 4000;
-    const INTERVAL_TIME = 50;
+    let isHolding = false, holdProgress = 0, holdInterval;
+    const TOTAL_HOLD_TIME = 4000, INTERVAL_TIME = 50;
+    const PROGRESS_INCREMENT = (INTERVAL_TIME / TOTAL_HOLD_TIME) * 100;
     let currentData = {};
 
     // Functions
@@ -586,23 +581,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: "Neo",
                 uid: "MATRIX001",
                 totalReferrals: 7,
-                verifiedReferrals: 6,
                 bonusEarned: 0.70,
                 referredUsers: [
                     { name: "Trinity", verified: true, joinDate: "2024-01-15" },
                     { name: "Morpheus", verified: true, joinDate: "2024-01-14" },
-                    { name: "Cipher", verified: false, joinDate: "2024-01-13" },
-                    { name: "Agent Smith", verified: true, joinDate: "2024-01-12" },
-                    { name: "Oracle", verified: true, joinDate: "2024-01-11" },
-                    { name: "Niobe", verified: true, joinDate: "2024-01-10" },
-                    { name: "Link", verified: true, joinDate: "2024-01-09" }
+                    { name: "Cipher", verified: false, joinDate: "2024-01-13" }
                 ],
                 bonusThreshold: 10,
                 bonusAmount: 1,
-                photoUrl: null,
-                rewardUid: null,
-                email: null,
-                withdrawalHistory: []
+                photoUrl: null
             };
         }
 
@@ -622,79 +609,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const populateData = (data) => {
-        currentData = data;
-        const { username, uid, totalReferrals, verifiedReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl, rewardUid, email } = data;
-        const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
-       
-        const verifiedCount = verifiedReferrals || 0;
-
-        // Home Tab
-        document.getElementById('home-username').textContent = username;
-
-        const avatarContainers = [document.getElementById('home-avatar'), document.getElementById('profile-avatar')];
-        avatarContainers.forEach(container => {
-            if (container) {
-                if (photoUrl) {
-                    container.innerHTML = '';
-                    container.style.backgroundImage = `url(${photoUrl})`;
-                    container.style.backgroundSize = 'cover';
-                    container.style.backgroundPosition = 'center';
-                } else {
-                    container.style.backgroundImage = 'none';
-                    container.textContent = username.charAt(0).toUpperCase() || '?';
-                }
-            }
-        });
-        
-        document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
-        document.getElementById('home-referrals').textContent = verifiedCount;
-       
-        const currentProgress = verifiedCount % bonusThreshold;
-        const needed = bonusThreshold - currentProgress;
-        const progressPercentage = (currentProgress / bonusThreshold) * 100;
-       
-        document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
-        document.getElementById('home-progress-bar').style.width = progressPercentage + '%';
-        document.getElementById('home-progress-text').textContent = currentProgress;
-       
-        const recentList = document.getElementById('recent-referrals-list');
-        recentList.innerHTML = '';
-        if (referredUsers && referredUsers.length > 0) {
-            referredUsers.slice(0, 3).forEach(user => { 
-                recentList.innerHTML += createReferralItem(user); 
-            });
-        } else {
-            recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your Bot link to begin</p></div>`;
-        }
-       
-        // Referral Tab
-        document.getElementById('referral-link-text').textContent = referralLink;
-        copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-        document.getElementById('stats-total').textContent = totalReferrals;
-        document.getElementById('stats-verified').textContent = verifiedCount;
-        document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
-
-        const fullList = document.getElementById('full-referrals-list');
-        fullList.innerHTML = '';
-        if (referredUsers && referredUsers.length > 0) {
-            referredUsers.forEach(user => { 
-                fullList.innerHTML += createReferralItem(user); 
-            });
-        } else {
-            fullList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-gray-300 mono">NO NETWORK NODES</p><p class="text-xs text-gray-400">Expand your Bot network</p></div>`;
-        }
-
-        // Profile Tab
-        document.getElementById('profile-username').textContent = username;
-        document.getElementById('profile-uid').textContent = uid;
-        document.getElementById('profile-total-referrals').textContent = totalReferrals;
-        document.getElementById('profile-total-bonus').textContent = bonusEarned.toFixed(2);
-
-        renderExchangeAccountZone(data);
-        renderWithdrawalZone(data);
-    };
+    currentData = data;
+        // در اینجا فیلدهای `rewardUid` و `email` اضافه شده‌اند
+    const { username, uid, totalReferrals, verifiedReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl, rewardUid, email } = data;
+    const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
    
-    const renderExchangeAccountZone = (data) => {
+    const verifiedCount = verifiedReferrals;
+
+    // Home Tab
+    document.getElementById('home-username').textContent = username;
+
+    const avatarContainers = [document.getElementById('home-avatar'), document.getElementById('profile-avatar')];
+    avatarContainers.forEach(container => {
+      if (container) {
+        if (photoUrl) {
+          container.innerHTML = '';
+          container.style.backgroundImage = `url(${photoUrl})`;
+          container.style.backgroundSize = 'cover';
+          container.style.backgroundPosition = 'center';
+        } else {
+          container.style.backgroundImage = 'none';
+          container.textContent = username.charAt(0).toUpperCase() || '?';
+        }
+      }
+    });
+    
+    document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
+    document.getElementById('home-referrals').textContent = verifiedCount;
+   
+    const currentProgress = verifiedCount % bonusThreshold;
+    const needed = bonusThreshold - currentProgress;
+   
+    document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
+    document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
+   
+    const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
+    homeProgressTextContainer.innerHTML = `<span class="mono"><span id="home-progress-text">${currentProgress}</span>/${bonusThreshold}</span><span class="text-green-400 font-semibold mono">+$${bonusAmount.toFixed(2)}</span>`;
+   
+    const recentList = document.getElementById('recent-referrals-list');
+    recentList.innerHTML = '';
+    if (referredUsers && referredUsers.length > 0) {
+      referredUsers.slice(0, 3).forEach(user => { recentList.innerHTML += createReferralItem(user, 'small'); });
+    } else {
+      recentList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-green-300/70 mono">NO CONNECTIONS YET</p><p class="text-xs text-green-300/50">Share your matrix link to begin</p></div>`;
+    }
+   
+    // Referral Tab
+    document.getElementById('referral-link-text').textContent = referralLink;
+    copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+    document.getElementById('stats-total').textContent = totalReferrals;
+    document.getElementById('stats-verified').textContent = verifiedCount;
+    document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
+    document.querySelector('#referral-tab .text-center').textContent = `${bonusThreshold} VERIFIED NODES = $${bonusAmount.toFixed(2)} REWARD`;
+
+    const fullList = document.getElementById('full-referrals-list');
+    fullList.innerHTML = '';
+    if (referredUsers && referredUsers.length > 0) {
+      referredUsers.forEach(user => { fullList.innerHTML += createReferralItem(user, 'large'); });
+    } else {
+      fullList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-green-300/70 mono">NO NETWORK NODES</p><p class="text-xs text-green-300/50">Expand your matrix network</p></div>`;
+    }
+
+    // Profile Tab
+    document.getElementById('profile-username').textContent = username;
+    document.getElementById('profile-uid').textContent = uid;
+    document.getElementById('profile-total-referrals').textContent = totalReferrals;
+    document.getElementById('profile-total-bonus').textContent = bonusEarned.toFixed(2);
+
+    // <<<< منطق قدیمی این بخش حذف شده و با فراخوانی تابع جدید جایگزین می‌شود >>>>
+    renderExchangeAccountZone(data);
+    renderWithdrawalZone(data);
+  };
+   
+  const renderExchangeAccountZone = (data) => {
         const { rewardUid, email } = data;
         const exchangeAccountContent = document.getElementById('exchange-account-content');
         const hasAccountInfo = rewardUid && email;
@@ -703,26 +690,26 @@ document.addEventListener('DOMContentLoaded', () => {
             exchangeAccountContent.innerHTML = `
                 <div class="space-y-3 text-sm">
                     <div>
-                        <label class="text-gray-400 mono text-xs">UID</label>
-                        <p class="mono bg-black p-2 rounded-md border border-gray-700">${rewardUid}</p>
+                        <label class="text-green-300/60 mono text-xs">UID</label>
+                        <p class="mono bg-black/30 p-2 rounded-md border border-green-900/50">${rewardUid}</p>
                     </div>
                     <div>
-                        <label class="text-gray-400 mono text-xs">EMAIL</label>
-                        <p class="mono bg-black p-2 rounded-md border border-gray-700">${email}</p>
+                        <label class="text-green-300/60 mono text-xs">EMAIL</label>
+                        <p class="mono bg-black/30 p-2 rounded-md border border-green-900/50">${email}</p>
                     </div>
-                    <p class="text-xs text-gray-400 text-center mono pt-2">Contact support to change details.</p>
+                    <p class="text-xs text-green-300/70 text-center mono pt-2">Contact support to change details.</p>
                 </div>`;
         } else {
             exchangeAccountContent.innerHTML = `
-                <p class="text-sm text-gray-300 mb-4 mono">Submit UID & Email for data transfer.</p>
+                <p class="text-sm text-green-300/70 mb-4 mono">Submit UID & Email for data transfer.</p>
                 <div class="space-y-4">
                     <div>
-                        <input type="text" id="uid-input" placeholder="ENTER YOUR UID" class="w-full p-3 bg-black border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 mono focus:ring-2 focus:border-opacity-100 outline-none" style="focus:ring-color: #01bc8d; focus:border-color: #01bc8d;">
+                        <input type="text" id="uid-input" placeholder="ENTER YOUR UID" class="w-full p-3 bg-black/30 border border-green-900/50 rounded-lg text-green-300 placeholder-green-300/40 mono focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
                     </div>
                     <div>
-                        <input type="email" id="email-input" placeholder="ENTER YOUR EMAIL" class="w-full p-3 bg-black border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 mono focus:ring-2 focus:border-opacity-100 outline-none" style="focus:ring-color: #01bc8d; focus:border-color: #01bc8d;">
+                        <input type="email" id="email-input" placeholder="ENTER YOUR EMAIL" class="w-full p-3 bg-black/30 border border-green-900/50 rounded-lg text-green-300 placeholder-green-300/40 mono focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
                     </div>
-                    <button id="save-verify-btn" class="w-full text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all press-effect mono flex items-center justify-center" style="background: linear-gradient(to right, #01bc8d, #00a67a);">
+                    <button id="save-verify-btn" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-black font-bold py-3 rounded-lg hover:shadow-lg transition-all press-effect mono flex items-center justify-center">
                         <span>SAVE & VERIFY</span>
                     </button>
                 </div>`;
@@ -731,56 +718,62 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderWithdrawalZone = (data) => {
-    const { bonusEarned, withdrawalThreshold = 5, withdrawalHistory = [], rewardUid, email } = data;
-    const requestView = document.getElementById('w-tab-request-view');
-    const historyView = document.getElementById('w-tab-history-view');
-    const hasAccountInfo = rewardUid && email;
-    const canWithdraw = bonusEarned >= withdrawalThreshold && hasAccountInfo;
+        const { bonusEarned, withdrawalThreshold, withdrawalHistory, rewardUid, email } = data;
+        const requestView = document.getElementById('w-tab-request-view');
+        const historyView = document.getElementById('w-tab-history-view');
+        const hasAccountInfo = rewardUid && email;
+        const canWithdraw = bonusEarned >= withdrawalThreshold && hasAccountInfo;
 
-    let requestHtml = `
-        <div class="text-center mb-4">
-            <p class="text-xs text-gray-400 mono">CURRENT BALANCE</p>
-            <p class="text-3xl font-bold text-white mono">$${bonusEarned.toFixed(2)}</p>
-        </div>
-        <div class="text-center mb-4">
-            <p class="text-2xl font-bold mono" style="color: #01bc8d;">${bonusEarned.toFixed(2)}/${withdrawalThreshold.toFixed(2)}</p>
-            <p class="text-xs text-gray-400 mono mt-1">WITHDRAWAL PROGRESS</p>
-        </div>
-        <button id="request-withdrawal-btn" class="w-full text-white font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''} style="background: ${canWithdraw ? 'linear-gradient(to right, #01bc8d, #00a67a)' : 'linear-gradient(to right, #666, #555)'};">
-            <span>REQUEST WITHDRAWAL</span>
-        </button>`;
-    
-    if (!hasAccountInfo) {
-        requestHtml += `<p class="text-xs text-yellow-400 text-center mono mt-2">Please set your Exchange Account first.</p>`;
-    } else if (bonusEarned < withdrawalThreshold) {
-        requestHtml += `<p class="text-xs text-gray-400 text-center mono mt-2">$${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
-    }
-    
-    requestView.innerHTML = requestHtml;
-    if(canWithdraw) {
-        document.getElementById('request-withdrawal-btn').addEventListener('click', handleRequestWithdrawal);
-    }
+        let requestHtml = `
+            <div class="text-center mb-4">
+                <p class="text-xs text-green-300/70 mono">CURRENT BALANCE</p>
+                <p class="text-3xl font-bold text-green-400 mono">$${bonusEarned.toFixed(2)}</p>
+            </div>
+            <div class="flex justify-center items-center space-x-2 mb-4">`;
+        
+        for (let i = 1; i <= withdrawalThreshold; i++) {
+            const filled = bonusEarned >= i;
+            requestHtml += `<div class="w-8 h-8 flex items-center justify-center rounded-lg ${filled ? 'bg-green-500 matrix-glow' : 'bg-black/30 border border-green-900/50'}">
+                <span class="${filled ? 'text-black' : 'text-green-300/40'} font-bold text-sm">${filled ? '$' : '-'}</span>
+            </div>`;
+        }
 
-    if (withdrawalHistory && withdrawalHistory.length > 0) {
-        historyView.innerHTML = '<div class="space-y-2 max-h-60 overflow-y-auto">' + withdrawalHistory.map(item => {
-            const statusInfo = {
-                'pending': { color: 'text-yellow-400', text: 'PENDING' },
-                'approved': { color: 'text-green-400', text: 'APPROVED' },
-                'rejected': { color: 'text-red-400', text: 'REJECTED' }
-            };
-            const currentStatus = statusInfo[item.status] || { color: 'text-gray-400', text: 'UNKNOWN' };
-            return `<div class="flex justify-between items-center p-3 bg-black rounded-lg border border-gray-700">
-                        <div>
-                            <p class="font-bold text-gray-300 mono">$${parseFloat(item.amount).toFixed(2)}</p>
-                            <p class="text-xs text-gray-400 mono">${new Date(item.request_date).toLocaleDateString()}</p>
-                        </div>
-                        <p class="text-xs font-semibold mono ${currentStatus.color}">${currentStatus.text}</p>
-                    </div>`;
-        }).join('') + '</div>';
-    } else {
-        historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-gray-300 mono">NO HISTORY</p></div>`;
-    }
-};
+        requestHtml += `</div>
+            <button id="request-withdrawal-btn" class="w-full bg-gradient-to-r ${canWithdraw ? 'from-green-600 to-green-700' : 'from-gray-600 to-gray-700'} text-black font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''}>
+                <span>REQUEST WITHDRAWAL</span>
+            </button>`;
+        
+        if (!hasAccountInfo) {
+            requestHtml += `<p class="text-xs text-yellow-400/80 text-center mono mt-2">Please set your Exchange Account first.</p>`;
+        } else if (bonusEarned < withdrawalThreshold) {
+            requestHtml += `<p class="text-xs text-green-300/70 text-center mono mt-2">$${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
+        }
+        
+        requestView.innerHTML = requestHtml;
+        if(canWithdraw) {
+            document.getElementById('request-withdrawal-btn').addEventListener('click', handleRequestWithdrawal);
+        }
+
+        if (withdrawalHistory && withdrawalHistory.length > 0) {
+            historyView.innerHTML = '<div class="space-y-2 max-h-60 overflow-y-auto">' + withdrawalHistory.map(item => {
+                const statusInfo = {
+                    'pending': { color: 'text-yellow-400', text: 'PENDING' },
+                    'approved': { color: 'text-green-400', text: 'APPROVED' },
+                    'rejected': { color: 'text-red-400', text: 'REJECTED' }
+                };
+                const currentStatus = statusInfo[item.status] || { color: 'text-gray-400', text: 'UNKNOWN' };
+                return `<div class="flex justify-between items-center p-3 bg-black/20 rounded-lg border border-green-900/30">
+                            <div>
+                                <p class="font-bold text-green-300 mono">$${parseFloat(item.amount).toFixed(2)}</p>
+                                <p class="text-xs text-green-300/60 mono">${new Date(item.request_date).toLocaleDateString()}</p>
+                            </div>
+                            <p class="text-xs font-semibold mono ${currentStatus.color}">${currentStatus.text}</p>
+                        </div>`;
+            }).join('') + '</div>';
+        } else {
+            historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-green-300/70 mono">NO HISTORY</p></div>`;
+        }
+    };
 
     async function handleSaveExchangeAccount(event) {
         const uid = document.getElementById('uid-input').value.trim();
@@ -790,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!uid || !email) { return showToast('Please fill in both UID and Email fields.', 'error'); }
 
         button.disabled = true;
-        button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-white/20 rounded-full mx-auto"></div>';
+        button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
         
         try {
             await api('save_exchange_account', { body: { uid, email } });
@@ -839,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleRequestWithdrawal(e) {
         const btn = e.currentTarget;
         btn.disabled = true;
-        btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-white/20 rounded-full mx-auto"></div>';
+        btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
         
         try {
             const result = await api('request_withdrawal');
@@ -852,33 +845,33 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Withdrawal request failed. Please try again.', 'error');
         }
     }
-
     const createReferralItem = (user) => {
-        const badge = user.verified ? 
-            `<span class="text-xs px-2 py-1 rounded-full border mono text-white status-badge-active">ACTIVE</span>` : 
-            `<span class="text-xs px-2 py-1 rounded-full border mono status-badge-pending">PENDING</span>`;
-        return `<div class="flex items-center justify-between p-3 bg-black rounded-lg border border-gray-700 hover-lift">
-                    <div class="flex items-center min-w-0">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">${user.name.charAt(0) || '?'}</div>
-                        <div class="ml-3 min-w-0">
-                            <div class="font-semibold text-gray-300 mono truncate">${user.name}</div>
-                            <div class="text-xs text-gray-400 mono">Joined: ${user.joinDate}</div>
-                        </div>
-                    </div>
-                    <div class="flex-shrink-0">${badge}</div>
-                </div>`;
+        const badge = user.verified ? `<span class="text-xs bg-green-500/30 text-green-400 px-2 py-1 rounded-full border border-green-500/50 mono">ACTIVE</span>` : `<span class="text-xs bg-yellow-500/30 text-yellow-400 px-2 py-1 rounded-full border border-yellow-500/50 mono">PENDING</span>`;
+        return `<div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-green-900/30"><div class="flex items-center min-w-0"><div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 matrix-border">${user.name.charAt(0) || '?'}</div><div class="ml-3 min-w-0"><div class="font-semibold text-green-300 mono truncate">${user.name}</div><div class="text-xs text-green-300/60 mono">Joined: ${user.joinDate}</div></div></div><div class="flex-shrink-0">${badge}</div></div>`;
     };
-
-    async function initApp() {
-        verificationScreen.style.display = 'none';
-        loadingDataScreen.style.display = 'flex';
-        try {
+    const verifyUser = () => {
+        holdIcon.textContent = '✅';
+        setTimeout(async () => {
+            verificationScreen.classList.add('hidden');
+            loadingDataScreen.style.display = 'flex';
+            
             const userData = await fetchUserData();
+
+            loadingDataScreen.style.display = 'none';
             if (userData) {
                 populateData(userData);
-                loadingDataScreen.style.display = 'none';
                 mainApp.classList.remove('hidden');
             }
+        }, 500);
+    };
+    async function initApp() {
+        document.getElementById('verification-screen').style.display = 'none';
+        document.getElementById('loading-data-screen').style.display = 'flex';
+        try {
+            const userData = await api('get_user_data');
+            populateData(userData);
+            document.getElementById('loading-data-screen').style.display = 'none';
+            mainApp.classList.remove('hidden');
         } catch (error) {
             showError("Matrix connection failed. Retry authentication.");
         }
@@ -886,76 +879,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startHolding = () => {
         if (holdInterval) return;
-        isHolding = true;
-        
         holdInterval = setInterval(() => {
             holdProgress += (INTERVAL_TIME / TOTAL_HOLD_TIME) * 100;
             const progress = Math.min(holdProgress, 100);
-            
-            // Fixed progress circle calculation
-            const circumference = 2 * Math.PI * 60; // radius is 60
-            const offset = circumference - (progress / 100) * circumference;
-            progressCircle.style.strokeDashoffset = offset;
-            
-            const seconds = Math.ceil((progress / 100) * 4);
-            progressText.textContent = `${Math.min(seconds, 4)}/4 SEC`;
-            
-            if (holdProgress >= 100) {
-                clearInterval(holdInterval);
-                holdIcon.textContent = '✅';
-                setTimeout(() => {
-                    initApp();
-                }, 500);
-            }
+            document.getElementById('progress-circle').style.strokeDashoffset = 314 - (progress / 100) * 314;
+            document.getElementById('progress-text').textContent = `${Math.floor((progress/100)* (TOTAL_HOLD_TIME/1000))}/2 SEC`;
+            if (holdProgress >= 100) { clearInterval(holdInterval); initApp(); }
         }, INTERVAL_TIME);
     };
-
     const stopHolding = () => {
-        if (!isHolding) return;
-        
         clearInterval(holdInterval);
         holdInterval = null;
-        isHolding = false;
-        
         if (holdProgress < 100) {
             holdProgress = 0;
-            const circumference = 2 * Math.PI * 60;
-            progressCircle.style.strokeDashoffset = circumference;
-            progressText.textContent = '0/4 SEC';
-            holdIcon.textContent = '⚡';
+            document.getElementById('progress-circle').style.strokeDashoffset = 314;
+            document.getElementById('progress-text').textContent = `0/2 SEC`;
         }
     };
+    
+    const updateProgressUI = () => {
+        const progress = Math.min(holdProgress, 100);
+        const radius = 50;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (progress / 100) * circumference;
+        progressCircle.style.strokeDashoffset = offset;
+        const seconds = Math.floor((progress / 100) * (TOTAL_HOLD_TIME / 1000));
+        progressText.textContent = `${seconds}/4 SEC`;
+    };
+    
 
     // Event Listeners
     holdButton.addEventListener('mousedown', startHolding);
     holdButton.addEventListener('mouseup', stopHolding);
     holdButton.addEventListener('mouseleave', stopHolding);
-    holdButton.addEventListener('touchstart', (e) => { 
-        e.preventDefault(); 
-        startHolding(); 
-    }, { passive: false });
-    holdButton.addEventListener('touchend', (e) => { 
-        e.preventDefault(); 
-        stopHolding(); 
-    });
-    
+    holdButton.addEventListener('touchstart', (e) => { e.preventDefault(); startHolding(); }, { passive: false });
+    holdButton.addEventListener('touchend', (e) => { e.preventDefault(); stopHolding(); });
     document.getElementById('profile-tab').addEventListener('click', e => {
         const tabBtn = e.target.closest('.w-tab-btn');
         if (tabBtn) {
             const tabId = tabBtn.dataset.wTab;
             document.querySelectorAll('.w-tab-btn').forEach(btn => {
-                btn.classList.remove('text-white');
-                btn.style.borderColor = 'transparent';
-                btn.classList.add('text-gray-400');
+                btn.classList.remove('text-green-400', 'border-green-400');
+                btn.classList.add('text-green-300/60', 'border-transparent');
             });
-            tabBtn.classList.add('text-white');
-            tabBtn.style.borderColor = '#01bc8d';
-            tabBtn.classList.remove('text-gray-400');
+            tabBtn.classList.add('text-green-400', 'border-green-400');
+            tabBtn.classList.remove('text-green-300/60', 'border-transparent');
             
             document.getElementById('w-tab-request-view').classList.toggle('hidden', tabId !== 'request');
             document.getElementById('w-tab-history-view').classList.toggle('hidden', tabId !== 'history');
         }
     });
+
+    // <<<< پایان کد جدید برای جایگزینی >>>> 
 
     retryButton.addEventListener('click', () => {
         errorScreen.style.display = 'none';
@@ -976,23 +951,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabToActivate = button.dataset.tab;
         
         navMenu.querySelectorAll('.nav-button').forEach(btn => { 
-            btn.classList.remove('text-white', 'nav-active');
-            btn.classList.add('text-gray-400', 'hover:text-white'); 
+            btn.classList.remove('text-green-400', 'bg-green-400/20'); 
+            btn.classList.add('text-green-300/60', 'hover:text-green-400'); 
         });
         Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
         
-        button.classList.add('text-white', 'nav-active');
-        button.classList.remove('text-gray-400', 'hover:text-white');
+        button.classList.add('text-green-400', 'bg-green-400/20');
+        button.classList.remove('text-green-300/60', 'hover:text-green-400');
         tabs[tabToActivate].classList.remove('hidden');
     });
 
     copyButton.addEventListener('click', () => {
         navigator.clipboard.writeText(`https://t.me/cointestpashabot?start=${currentData.uid}`).then(() => {
-            copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>`;
+            copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"/></svg>`;
             toast.classList.remove('opacity-0');
             setTimeout(() => {
                 toast.classList.add('opacity-0');
-                copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+                copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
             }, 2000);
         });
     });
