@@ -10,11 +10,13 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
         
         :root {
-            --matrix-green: #00ff41;
-            --matrix-dark: #0d1117;
-            --matrix-darker: #010409;
-            --matrix-green-glow: rgba(0, 255, 65, 0.3);
-            --matrix-green-dim: rgba(0, 255, 65, 0.1);
+            --matrix-green: #01bc8d;
+            --matrix-dark: #1a1a1a;
+            --matrix-darker: #0a0a0a;
+            --matrix-green-glow: rgba(1, 188, 141, 0.4);
+            --matrix-green-dim: rgba(1, 188, 141, 0.15);
+            --matrix-white: #ffffff;
+            --matrix-gray: #2a2a2a;
         }
 
         body {
@@ -24,7 +26,7 @@
             overscroll-behavior: none;
             user-select: none;
             -webkit-user-select: none;
-            background: linear-gradient(135deg, var(--matrix-darker) 0%, var(--matrix-dark) 50%, #0f172a 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 70%, #1a1a1a 100%);
             min-height: 100vh;
         }
 
@@ -40,18 +42,39 @@
         }
         
         .matrix-glow {
-            box-shadow: 0 0 20px var(--matrix-green-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 0 20px var(--matrix-green-glow), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 4px 20px rgba(1, 188, 141, 0.2);
         }
         
         .matrix-border {
-            border: 1px solid var(--matrix-green);
-            box-shadow: 0 0 10px var(--matrix-green-glow);
+            border: 2px solid var(--matrix-green);
+            box-shadow: 
+                0 0 15px var(--matrix-green-glow),
+                inset 0 0 10px rgba(1, 188, 141, 0.1);
         }
         
         .glass-card {
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            background: linear-gradient(145deg, 
+                rgba(42, 42, 42, 0.9) 0%, 
+                rgba(26, 26, 26, 0.85) 50%, 
+                rgba(42, 42, 42, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(1, 188, 141, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--matrix-green), transparent);
+            opacity: 0.6;
         }
 
         .animated-bg {
@@ -66,19 +89,20 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
-            animation: shimmer 3s infinite;
+            background: linear-gradient(90deg, transparent, rgba(1, 188, 141, 0.15), transparent);
+            animation: shimmer 4s ease-in-out infinite;
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% { left: -100%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
         }
 
         @keyframes matrix-rain {
             0% { transform: translateY(-100%); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.3; }
             100% { transform: translateY(100vh); opacity: 0; }
         }
 
@@ -87,24 +111,27 @@
             top: 0;
             font-family: 'JetBrains Mono', monospace;
             color: var(--matrix-green);
-            font-size: 14px;
+            font-size: 12px;
             z-index: -1;
-            animation: matrix-rain 4s linear infinite;
+            animation: matrix-rain 6s linear infinite;
+            text-shadow: 0 0 5px var(--matrix-green);
         }
 
         @keyframes pulse-green {
             0%, 100% { 
-                box-shadow: 0 0 10px var(--matrix-green-glow);
-                border-color: rgba(0, 255, 65, 0.3);
+                box-shadow: 0 0 15px var(--matrix-green-glow);
+                border-color: rgba(1, 188, 141, 0.4);
+                transform: scale(1);
             }
             50% { 
-                box-shadow: 0 0 20px var(--matrix-green-glow), 0 0 30px var(--matrix-green-glow);
+                box-shadow: 0 0 30px var(--matrix-green-glow), 0 0 50px rgba(1, 188, 141, 0.3);
                 border-color: var(--matrix-green);
+                transform: scale(1.02);
             }
         }
 
         .animate-pulse-green {
-            animation: pulse-green 2s ease-in-out infinite;
+            animation: pulse-green 3s ease-in-out infinite;
         }
 
         .spinner {
@@ -125,7 +152,7 @@
             overflow: hidden;
             border-right: 2px solid var(--matrix-green);
             white-space: nowrap;
-            animation: typing 2s steps(20, end), blink-caret 0.75s step-end infinite;
+            animation: typing 3s steps(30, end), blink-caret 1s step-end infinite;
         }
 
         @keyframes blink-caret {
@@ -134,26 +161,32 @@
         }
 
         .hover-lift {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .hover-lift:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px var(--matrix-green-glow);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px var(--matrix-green-glow);
         }
 
-        /* Custom scrollbar */
+        /* Enhanced Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
             background: var(--matrix-dark);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--matrix-green);
-            border-radius: 3px;
+            background: linear-gradient(to bottom, var(--matrix-green), #00a67a);
+            border-radius: 4px;
+            box-shadow: 0 0 5px var(--matrix-green-glow);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #00d4a3, var(--matrix-green));
         }
 
         /* Responsive adjustments */
@@ -164,13 +197,58 @@
             }
         }
 
-        /* Button press effect */
+        /* Enhanced Button press effect */
         .press-effect:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Progress bar enhancements */
+        .progress-bar {
+            background: linear-gradient(90deg, var(--matrix-green), #00d4a3, var(--matrix-green));
+            background-size: 200% 100%;
+            animation: progress-shine 2s ease-in-out infinite;
+            box-shadow: 
+                0 0 10px var(--matrix-green-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes progress-shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Enhanced navigation */
+        .nav-active {
+            background: linear-gradient(135deg, 
+                rgba(1, 188, 141, 0.3) 0%, 
+                rgba(1, 188, 141, 0.15) 100%) !important;
+            box-shadow: 
+                0 0 15px rgba(1, 188, 141, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Badge enhancements */
+        .status-badge-active {
+            background: linear-gradient(135deg, 
+                rgba(1, 188, 141, 0.4) 0%, 
+                rgba(1, 188, 141, 0.2) 100%);
+            border: 1px solid rgba(1, 188, 141, 0.6);
+            color: #00d4a3;
+            text-shadow: 0 0 5px rgba(1, 188, 141, 0.5);
+        }
+
+        .status-badge-pending {
+            background: linear-gradient(135deg, 
+                rgba(255, 193, 7, 0.4) 0%, 
+                rgba(255, 193, 7, 0.2) 100%);
+            border: 1px solid rgba(255, 193, 7, 0.6);
+            color: #ffc107;
+            text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
         }
     </style>
 </head>
-<body class="text-green-400 overflow-x-hidden">
+<body class="text-white overflow-x-hidden">
     <!-- Matrix Rain Background -->
     <div id="matrix-bg" class="fixed inset-0 pointer-events-none z-0"></div>
 
@@ -178,20 +256,20 @@
     <div id="verification-screen" class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 relative z-10">
         <div class="glass-card rounded-3xl p-6 sm:p-8 text-center max-w-sm w-full matrix-glow hover-lift">
             <div class="text-5xl sm:text-6xl mb-6 animate-bounce">🔐</div>
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-400 mono">SYSTEM VERIFICATION</h2>
-            <p class="mb-8 text-green-300 text-sm">Hold button for 4 seconds to authenticate</p>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-white mono">SYSTEM VERIFICATION</h2>
+            <p class="mb-8 text-gray-300 text-sm">Hold button for 4 seconds to authenticate</p>
             
             <div class="relative mb-6">
-                <div class="w-28 h-28 sm:w-32 sm:h-32 mx-auto relative">
+                <div class="w-32 h-32 sm:w-36 sm:h-36 mx-auto relative">
                     <svg class="w-full h-full transform -rotate-90">
-                        <circle cx="50%" cy="50%" r="50" stroke="currentColor" stroke-width="6" fill="transparent" class="text-green-900/30" />
-                        <circle id="progress-circle" cx="50%" cy="50%" r="50" stroke="currentColor" stroke-width="6" fill="transparent" stroke-linecap="round" class="text-green-400 transition-all duration-100" style="stroke-dasharray: 314; stroke-dashoffset: 314;"></circle>
+                        <circle cx="50%" cy="50%" r="60" stroke="currentColor" stroke-width="4" fill="transparent" class="text-gray-700" />
+                        <circle id="progress-circle" cx="50%" cy="50%" r="60" stroke="currentColor" stroke-width="4" fill="transparent" stroke-linecap="round" style="color: #01bc8d; stroke-dasharray: 377; stroke-dashoffset: 377; transition: stroke-dashoffset 0.1s linear;" class="filter drop-shadow-lg"></circle>
                     </svg>
-                    <button id="hold-button" class="absolute inset-3 sm:inset-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg press-effect transition-transform flex items-center justify-center text-3xl sm:text-4xl animate-pulse-green">
+                    <button id="hold-button" class="absolute inset-4 sm:inset-5 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full shadow-lg press-effect transition-all flex items-center justify-center text-3xl sm:text-4xl animate-pulse-green" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
                         <span id="hold-icon" class="filter drop-shadow-lg">⚡</span>
                     </button>
                 </div>
-                <div id="progress-text" class="mt-4 text-lg font-semibold text-green-400 mono">0/4 SEC</div>
+                <div id="progress-text" class="mt-4 text-lg font-semibold text-white mono">0/4 SEC</div>
             </div>
         </div>
     </div>
@@ -199,9 +277,9 @@
     <!-- =========== Loading Screen =========== -->
     <div id="loading-data-screen" class="hidden flex-col items-center justify-center min-h-screen p-6">
         <div class="glass-card rounded-2xl p-8 text-center matrix-glow">
-            <div class="spinner w-12 h-12 border-4 border-green-900 rounded-full mb-4 mx-auto"></div>
-            <p class="font-semibold text-green-400 mono typing-effect">INITIALIZING MATRIX...</p>
-            <div class="mt-2 text-sm text-green-300">Connecting to the grid...</div>
+            <div class="spinner w-16 h-16 border-4 border-gray-700 rounded-full mb-6 mx-auto"></div>
+            <p class="font-semibold text-white mono typing-effect text-lg">INITIALIZING MATRIX...</p>
+            <div class="mt-3 text-sm text-gray-300">Connecting to the neural network...</div>
         </div>
     </div>
     
@@ -210,8 +288,8 @@
         <div class="glass-card rounded-2xl p-6 sm:p-8 text-center max-w-sm w-full matrix-glow">
             <div class="text-4xl sm:text-5xl mb-4">💀</div>
             <h2 class="text-xl font-bold mb-2 text-red-400 mono">CONNECTION FAILED</h2>
-            <p id="error-message" class="text-green-300 mb-6 text-sm">Matrix connection interrupted. Retry authentication.</p>
-            <button id="retry-button" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-black font-bold py-3 px-6 rounded-lg hover:shadow-lg transition-all press-effect mono">RETRY CONNECTION</button>
+            <p id="error-message" class="text-gray-300 mb-6 text-sm">Matrix connection interrupted. Retry authentication.</p>
+            <button id="retry-button" class="w-full text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition-all press-effect mono" style="background: linear-gradient(to right, #01bc8d, #00a67a);">RETRY CONNECTION</button>
         </div>
     </div>
 
@@ -223,12 +301,12 @@
                 <!-- Welcome Card -->
                 <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-lg matrix-glow hover-lift animated-bg">
                     <div class="flex items-center gap-3 sm:gap-4">
-                        <div id="home-avatar" class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex-shrink-0 flex items-center justify-center text-lg sm:text-xl font-bold matrix-border">
+                        <div id="home-avatar" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex-shrink-0 flex items-center justify-center text-lg sm:text-xl font-bold matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
                             <!-- Filled by JS -->
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h2 class="text-lg sm:text-2xl font-bold text-green-400 mono">WELCOME <span id="home-username" class="text-green-300"></span>! ⚡</h2>
-                            <p class="text-green-300/80 text-xs sm:text-sm">Neural Link Dashboard Active</p>
+                            <h2 class="text-lg sm:text-2xl font-bold text-white mono">WELCOME <span id="home-username" class="text-gray-300"></span>! ⚡</h2>
+                            <p class="text-gray-400 text-xs sm:text-sm">Neural Link Dashboard Active</p>
                         </div>
                     </div>
                 </div>
@@ -237,46 +315,46 @@
                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
                     <div class="glass-card rounded-xl p-3 sm:p-4 shadow-lg hover-lift animated-bg">
                         <div class="flex items-center mb-2">
-                            <div class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
                                 <span class="text-black font-bold text-sm">$</span>
                             </div>
-                            <span class="font-semibold text-xs sm:text-sm text-green-300">Rewards</span>
+                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Rewards</span>
                         </div>
-                        <div class="text-xl sm:text-3xl font-bold text-green-400 mono">$<span id="home-bonus">0</span></div>
-                        <div class="text-xs text-green-300/70">Matrix Bonus</div>
+                        <div class="text-xl sm:text-3xl font-bold text-white mono">$<span id="home-bonus">0</span></div>
+                        <div class="text-xs text-gray-400">Matrix Bonus</div>
                     </div>
                     <div class="glass-card rounded-xl p-3 sm:p-4 shadow-lg hover-lift animated-bg">
                         <div class="flex items-center mb-2">
-                            <div class="w-8 h-8 bg-green-400 rounded-lg flex items-center justify-center mr-2 flex-shrink-0">
-                                <span class="text-black font-bold text-sm">👥</span>
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
+                                <span class="text-white font-bold text-sm">👥</span>
                             </div>
-                            <span class="font-semibold text-xs sm:text-sm text-green-300">Active</span>
+                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Active</span>
                         </div>
-                        <div class="text-xl sm:text-3xl font-bold text-green-400 mono" id="home-referrals">0</div>
-                        <div class="text-xs text-green-300/70"><span id="home-needed-referrals">10</span> more needed</div>
+                        <div class="text-xl sm:text-3xl font-bold text-white mono" id="home-referrals">0</div>
+                        <div class="text-xs text-gray-400"><span id="home-needed-referrals">10</span> more needed</div>
                     </div>
                 </div>
 
                 <!-- Progress Card -->
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-green-400 mb-3 flex items-center mono text-sm sm:text-base">
-                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                    <h3 class="font-bold text-white mb-3 flex items-center mono text-sm sm:text-base">
+                        <span class="w-2 h-2 rounded-full mr-2 animate-pulse" style="background-color: #01bc8d;"></span>
                         NEXT REWARD PROGRESS
                     </h3>
-                    <div class="w-full bg-gray-800/50 rounded-full h-2 sm:h-3 mb-2 border border-green-900/30">
-                        <div id="home-progress-bar" class="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full transition-all duration-1000 shadow-lg" style="width: 0%; box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);"></div>
+                    <div class="w-full bg-gray-800 rounded-full h-3 sm:h-4 mb-2 border border-gray-700 overflow-hidden">
+                        <div id="home-progress-bar" class="h-full rounded-full transition-all duration-1000 progress-bar" style="width: 0%;"></div>
                     </div>
-                    <div class="flex justify-between text-xs text-green-300/80">
+                    <div class="flex justify-between text-xs text-gray-400">
                         <span class="mono"><span id="home-progress-text">0</span>/10</span>
-                        <span class="text-green-400 font-semibold mono">+$1.00</span>
+                        <span class="font-semibold mono" style="color: #01bc8d;">+$1.00</span>
                     </div>
                 </div>
 
                 <!-- Recent Activity -->
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-green-400 mb-3 flex items-center mono text-sm sm:text-base">
+                    <h3 class="font-bold text-white mb-3 flex items-center mono text-sm sm:text-base">
                         <div class="w-4 h-4 mr-2 flex-shrink-0">
-                            <div class="w-full h-full bg-green-400 rounded-sm animate-pulse"></div>
+                            <div class="w-full h-full rounded-sm animate-pulse" style="background-color: #01bc8d;"></div>
                         </div>
                         RECENT CONNECTIONS
                     </h3>
@@ -287,60 +365,77 @@
             <!-- Referral Tab -->
             <div id="referral-tab" class="p-3 sm:p-4 space-y-4 hidden">
                 <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-lg matrix-glow hover-lift">
-                    <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center mono text-green-400">
-                        <div class="w-6 h-6 mr-2 bg-green-400 rounded rotate-45 flex-shrink-0"></div>
+                    <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center mono text-white">
+                        <div class="w-6 h-6 mr-2 rounded rotate-45 flex-shrink-0" style="background-color: #01bc8d;"></div>
                         YOUR MATRIX LINK
                     </h2>
-                    <div class="bg-black/40 backdrop-blur-sm rounded-lg p-3 sm:p-4 mb-4 border border-green-900/50">
-                        <div class="text-xs mb-2 text-green-300/80 mono">INVITATION CODE:</div>
+                    <div class="bg-black backdrop-blur-sm rounded-lg p-3 sm:p-4 mb-4 border border-gray-700">
+                        <div class="text-xs mb-2 text-gray-400 mono">INVITATION CODE:</div>
                         <div class="flex items-center gap-2">
-                            <div id="referral-link-text" class="flex-1 bg-black/50 rounded-lg p-2 sm:p-3 text-xs font-mono break-all text-green-300 border border-green-900/30"></div>
-                            <button id="copy-button" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 p-2 sm:p-3 rounded-lg transition-all press-effect flex-shrink-0"></button>
+                            <div id="referral-link-text" class="flex-1 bg-black rounded-lg p-2 sm:p-3 text-xs font-mono break-all text-gray-300 border border-gray-700"></div>
+                            <button id="copy-button" class="p-2 sm:p-3 rounded-lg transition-all press-effect flex-shrink-0" style="background: linear-gradient(to right, #01bc8d, #00a67a);"></button>
                         </div>
                     </div>
-                    <p class="text-center text-xs text-green-300/70 mono">10 VERIFIED NODES = $1.00 REWARD</p>
+                    <p class="text-center text-xs text-gray-400 mono">10 VERIFIED NODES = $1.00 REWARD</p>
                 </div>
 
                 <!-- Stats Overview -->
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-green-400 mb-4 mono text-sm sm:text-base">CONNECTION STATISTICS</h3>
+                    <h3 class="font-bold text-white mb-4 mono text-sm sm:text-base">CONNECTION STATISTICS</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-black/30 rounded-lg p-3 border border-green-900/30">
-                            <div class="text-xl sm:text-2xl font-bold text-green-400 mono" id="stats-total">0</div>
-                            <div class="text-xs text-green-300/70 mono">TOTAL</div>
+                        <div class="bg-black rounded-lg p-3 border border-gray-700">
+                            <div class="text-xl sm:text-2xl font-bold text-white mono" id="stats-total">0</div>
+                            <div class="text-xs text-gray-400 mono">TOTAL</div>
                         </div>
-                        <div class="bg-black/30 rounded-lg p-3 border border-green-900/30">
-                            <div class="text-xl sm:text-2xl font-bold text-green-500 mono" id="stats-verified">0</div>
-                            <div class="text-xs text-green-300/70 mono">ACTIVE</div>
+                        <div class="bg-black rounded-lg p-3 border border-gray-700">
+                            <div class="text-xl sm:text-2xl font-bold mono" style="color: #01bc8d;" id="stats-verified">0</div>
+                            <div class="text-xs text-gray-400 mono">ACTIVE</div>
                         </div>
-                        <div class="bg-black/30 rounded-lg p-3 border border-green-900/30">
+                        <div class="bg-black rounded-lg p-3 border border-gray-700">
                             <div class="text-xl sm:text-2xl font-bold text-yellow-400 mono" id="stats-pending">0</div>
-                            <div class="text-xs text-green-300/70 mono">PENDING</div>
+                            <div class="text-xs text-gray-400 mono">PENDING</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Network Nodes -->
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-green-400 mb-3 mono text-sm sm:text-base">NETWORK NODES</h3>
+                    <h3 class="font-bold text-white mb-3 mono text-sm sm:text-base">NETWORK NODES</h3>
                     <div id="full-referrals-list" class="space-y-2 sm:space-y-3 max-h-80 overflow-y-auto"></div>
                 </div>
             </div>
 
             <!-- Profile Tab -->
             <div id="profile-tab" class="p-4 space-y-4 hidden">
-                <div class="glass-card rounded-2xl p-6 text-center shadow-lg matrix-glow hover-lift"><div id="profile-avatar" class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold matrix-border"></div><h2 class="text-xl font-bold text-green-400 mono" id="profile-username"></h2><p class="text-green-300/80 mt-1 text-sm">ID: <span id="profile-uid" class="mono"></span></p></div>
-                <div class="glass-card rounded-xl p-5 shadow-lg hover-lift"><h3 class="font-bold text-green-400 mb-3 mono">ACCOUNT STATS</h3><div class="space-y-3"><div class="flex justify-between items-center p-3 bg-green-900/20 rounded-lg border border-green-900/50"><span class="text-green-300 text-sm mono">Total Nodes</span><span class="font-bold text-green-400 mono" id="profile-total-referrals"></span></div><div class="flex justify-between items-center p-3 bg-green-900/20 rounded-lg border border-green-900/50"><span class="text-green-300 text-sm mono">Rewards</span><span class="font-bold text-green-400 mono">$<span id="profile-total-bonus"></span></span></div></div></div>
+                <div class="glass-card rounded-2xl p-6 text-center shadow-lg matrix-glow hover-lift">
+                    <div id="profile-avatar" class="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);"></div>
+                    <h2 class="text-xl font-bold text-white mono" id="profile-username"></h2>
+                    <p class="text-gray-400 mt-1 text-sm">ID: <span id="profile-uid" class="mono"></span></p>
+                </div>
                 
                 <div class="glass-card rounded-xl p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-green-400 mb-4 mono">EXCHANGE ACCOUNT</h3>
+                    <h3 class="font-bold text-white mb-3 mono">ACCOUNT STATS</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <span class="text-gray-300 text-sm mono">Total Nodes</span>
+                            <span class="font-bold text-white mono" id="profile-total-referrals"></span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <span class="text-gray-300 text-sm mono">Rewards</span>
+                            <span class="font-bold text-white mono">$<span id="profile-total-bonus"></span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-5 shadow-lg hover-lift">
+                    <h3 class="font-bold text-white mb-4 mono">EXCHANGE ACCOUNT</h3>
                     <div id="exchange-account-content"></div>
                 </div>
 
                 <div class="glass-card rounded-xl p-5 shadow-lg hover-lift">
-                    <div id="withdrawal-tabs" class="flex border-b border-green-900/50 mb-4">
-                        <button data-w-tab="request" class="w-tab-btn flex-1 pb-2 text-center mono text-sm font-semibold text-green-400 border-b-2 border-green-400">REQUEST</button>
-                        <button data-w-tab="history" class="w-tab-btn flex-1 pb-2 text-center mono text-sm font-semibold text-green-300/60 border-b-2 border-transparent">HISTORY</button>
+                    <div id="withdrawal-tabs" class="flex border-b border-gray-700 mb-4">
+                        <button data-w-tab="request" class="w-tab-btn flex-1 pb-2 text-center mono text-sm font-semibold text-white border-b-2" style="border-color: #01bc8d;">REQUEST</button>
+                        <button data-w-tab="history" class="w-tab-btn flex-1 pb-2 text-center mono text-sm font-semibold text-gray-400 border-b-2 border-transparent">HISTORY</button>
                     </div>
                     <div>
                         <div id="w-tab-request-view"></div>
@@ -351,17 +446,17 @@
         </div>
 
         <!-- Bottom Navigation -->
-        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/90 backdrop-blur-sm border-t border-green-900/50 px-3 sm:px-4 pt-2 pb-3 sm:pb-4">
+        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto backdrop-blur-sm border-t border-gray-700 px-3 sm:px-4 pt-2 pb-3 sm:pb-4" style="background: linear-gradient(to top, rgba(10, 10, 10, 0.95), rgba(26, 26, 26, 0.9));">
             <div id="nav-menu" class="flex justify-around">
-                <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-16 sm:w-20 text-green-400 bg-green-400/20 press-effect">
-                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-400 rounded"></div>
+                <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-white press-effect nav-active">
+                    <div class="w-5 h-5 sm:w-6 sm:h-6 rounded" style="background-color: #01bc8d;"></div>
                     <span class="text-xs mono">HOME</span>
                 </button>
-                <button data-tab="referral" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-16 sm:w-20 text-green-300/60 hover:text-green-400 press-effect">
+                <button data-tab="referral" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-gray-400 hover:text-white press-effect">
                     <div class="w-5 h-5 sm:w-6 sm:h-6 border-2 border-current rounded"></div>
                     <span class="text-xs mono">LINK</span>
                 </button>
-                <button data-tab="profile" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors w-16 sm:w-20 text-green-300/60 hover:text-green-400 press-effect">
+                <button data-tab="profile" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-gray-400 hover:text-white press-effect">
                     <div class="w-5 h-5 sm:w-6 sm:h-6 bg-current rounded-full"></div>
                     <span class="text-xs mono">USER</span>
                 </button>
@@ -370,28 +465,31 @@
     </div>
     
     <!-- Toast -->
-    <div id="toast" class="fixed bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-600 to-green-700 text-black font-bold py-2 px-4 sm:px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300 mono text-sm">LINK COPIED!</div>
+    <div id="toast" class="fixed bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 text-white font-bold py-3 px-6 rounded-full shadow-lg opacity-0 transition-opacity duration-300 mono text-sm matrix-glow" style="background: linear-gradient(to right, #01bc8d, #00a67a);">LINK COPIED!</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Matrix Rain Effect
+    // Enhanced Matrix Rain Effect
     function createMatrixRain() {
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン$£¥€';
         const matrixBg = document.getElementById('matrix-bg');
         
         function addRain() {
+            if (document.querySelectorAll('.matrix-rain').length > 50) return;
+            
             const rain = document.createElement('div');
             rain.className = 'matrix-rain';
             rain.style.left = Math.random() * 100 + 'vw';
-            rain.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            rain.style.opacity = Math.random() * 0.5 + 0.1;
+            rain.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            rain.style.opacity = Math.random() * 0.7 + 0.2;
+            rain.style.fontSize = (Math.random() * 8 + 10) + 'px';
             rain.textContent = chars[Math.floor(Math.random() * chars.length)];
             matrixBg.appendChild(rain);
             
-            setTimeout(() => rain.remove(), 5000);
+            setTimeout(() => rain.remove(), 7000);
         }
         
-        setInterval(addRain, 200);
+        setInterval(addRain, 150);
     }
     createMatrixRain();
 
@@ -404,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     tg.ready();
     tg.expand();
-    tg.setHeaderColor('#0d1117');
+    tg.setHeaderColor('#1a1a1a');
 
     // DOM Elements
     const verificationScreen = document.getElementById('verification-screen');
@@ -427,9 +525,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
 
     // State
-    let isHolding = false, holdProgress = 0, holdInterval;
-    const TOTAL_HOLD_TIME = 4000, INTERVAL_TIME = 50;
-    const PROGRESS_INCREMENT = (INTERVAL_TIME / TOTAL_HOLD_TIME) * 100;
+    let isHolding = false;
+    let holdProgress = 0;
+    let holdInterval = null;
+    const TOTAL_HOLD_TIME = 4000;
+    const INTERVAL_TIME = 50;
     let currentData = {};
 
     // Functions
@@ -450,15 +550,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: "Neo",
                 uid: "MATRIX001",
                 totalReferrals: 7,
+                verifiedReferrals: 6,
                 bonusEarned: 0.70,
                 referredUsers: [
                     { name: "Trinity", verified: true, joinDate: "2024-01-15" },
                     { name: "Morpheus", verified: true, joinDate: "2024-01-14" },
-                    { name: "Cipher", verified: false, joinDate: "2024-01-13" }
+                    { name: "Cipher", verified: false, joinDate: "2024-01-13" },
+                    { name: "Agent Smith", verified: true, joinDate: "2024-01-12" },
+                    { name: "Oracle", verified: true, joinDate: "2024-01-11" },
+                    { name: "Niobe", verified: true, joinDate: "2024-01-10" },
+                    { name: "Link", verified: true, joinDate: "2024-01-09" }
                 ],
                 bonusThreshold: 10,
                 bonusAmount: 1,
-                photoUrl: null
+                photoUrl: null,
+                rewardUid: null,
+                email: null,
+                withdrawalHistory: []
             };
         }
 
@@ -478,79 +586,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const populateData = (data) => {
-    currentData = data;
-        // در اینجا فیلدهای `rewardUid` و `email` اضافه شده‌اند
-    const { username, uid, totalReferrals, verifiedReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl, rewardUid, email } = data;
-    const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
-   
-    const verifiedCount = verifiedReferrals;
+        currentData = data;
+        const { username, uid, totalReferrals, verifiedReferrals, bonusEarned, referredUsers, bonusThreshold, bonusAmount, photoUrl, rewardUid, email } = data;
+        const referralLink = `https://t.me/cointestpashabot?start=${uid}`;
+       
+        const verifiedCount = verifiedReferrals || 0;
 
-    // Home Tab
-    document.getElementById('home-username').textContent = username;
+        // Home Tab
+        document.getElementById('home-username').textContent = username;
 
-    const avatarContainers = [document.getElementById('home-avatar'), document.getElementById('profile-avatar')];
-    avatarContainers.forEach(container => {
-      if (container) {
-        if (photoUrl) {
-          container.innerHTML = '';
-          container.style.backgroundImage = `url(${photoUrl})`;
-          container.style.backgroundSize = 'cover';
-          container.style.backgroundPosition = 'center';
+        const avatarContainers = [document.getElementById('home-avatar'), document.getElementById('profile-avatar')];
+        avatarContainers.forEach(container => {
+            if (container) {
+                if (photoUrl) {
+                    container.innerHTML = '';
+                    container.style.backgroundImage = `url(${photoUrl})`;
+                    container.style.backgroundSize = 'cover';
+                    container.style.backgroundPosition = 'center';
+                } else {
+                    container.style.backgroundImage = 'none';
+                    container.textContent = username.charAt(0).toUpperCase() || '?';
+                }
+            }
+        });
+        
+        document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
+        document.getElementById('home-referrals').textContent = verifiedCount;
+       
+        const currentProgress = verifiedCount % bonusThreshold;
+        const needed = bonusThreshold - currentProgress;
+        const progressPercentage = (currentProgress / bonusThreshold) * 100;
+       
+        document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
+        document.getElementById('home-progress-bar').style.width = progressPercentage + '%';
+        document.getElementById('home-progress-text').textContent = currentProgress;
+       
+        const recentList = document.getElementById('recent-referrals-list');
+        recentList.innerHTML = '';
+        if (referredUsers && referredUsers.length > 0) {
+            referredUsers.slice(0, 3).forEach(user => { 
+                recentList.innerHTML += createReferralItem(user); 
+            });
         } else {
-          container.style.backgroundImage = 'none';
-          container.textContent = username.charAt(0).toUpperCase() || '?';
+            recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your matrix link to begin</p></div>`;
         }
-      }
-    });
-    
-    document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
-    document.getElementById('home-referrals').textContent = verifiedCount;
-   
-    const currentProgress = verifiedCount % bonusThreshold;
-    const needed = bonusThreshold - currentProgress;
-   
-    document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
-    document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
-   
-    const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
-    homeProgressTextContainer.innerHTML = `<span class="mono"><span id="home-progress-text">${currentProgress}</span>/${bonusThreshold}</span><span class="text-green-400 font-semibold mono">+$${bonusAmount.toFixed(2)}</span>`;
-   
-    const recentList = document.getElementById('recent-referrals-list');
-    recentList.innerHTML = '';
-    if (referredUsers && referredUsers.length > 0) {
-      referredUsers.slice(0, 3).forEach(user => { recentList.innerHTML += createReferralItem(user, 'small'); });
-    } else {
-      recentList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-green-300/70 mono">NO CONNECTIONS YET</p><p class="text-xs text-green-300/50">Share your matrix link to begin</p></div>`;
-    }
-   
-    // Referral Tab
-    document.getElementById('referral-link-text').textContent = referralLink;
-    copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-    document.getElementById('stats-total').textContent = totalReferrals;
-    document.getElementById('stats-verified').textContent = verifiedCount;
-    document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
-    document.querySelector('#referral-tab .text-center').textContent = `${bonusThreshold} VERIFIED NODES = $${bonusAmount.toFixed(2)} REWARD`;
+       
+        // Referral Tab
+        document.getElementById('referral-link-text').textContent = referralLink;
+        copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+        document.getElementById('stats-total').textContent = totalReferrals;
+        document.getElementById('stats-verified').textContent = verifiedCount;
+        document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
 
-    const fullList = document.getElementById('full-referrals-list');
-    fullList.innerHTML = '';
-    if (referredUsers && referredUsers.length > 0) {
-      referredUsers.forEach(user => { fullList.innerHTML += createReferralItem(user, 'large'); });
-    } else {
-      fullList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-green-300/70 mono">NO NETWORK NODES</p><p class="text-xs text-green-300/50">Expand your matrix network</p></div>`;
-    }
+        const fullList = document.getElementById('full-referrals-list');
+        fullList.innerHTML = '';
+        if (referredUsers && referredUsers.length > 0) {
+            referredUsers.forEach(user => { 
+                fullList.innerHTML += createReferralItem(user); 
+            });
+        } else {
+            fullList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-gray-300 mono">NO NETWORK NODES</p><p class="text-xs text-gray-400">Expand your matrix network</p></div>`;
+        }
 
-    // Profile Tab
-    document.getElementById('profile-username').textContent = username;
-    document.getElementById('profile-uid').textContent = uid;
-    document.getElementById('profile-total-referrals').textContent = totalReferrals;
-    document.getElementById('profile-total-bonus').textContent = bonusEarned.toFixed(2);
+        // Profile Tab
+        document.getElementById('profile-username').textContent = username;
+        document.getElementById('profile-uid').textContent = uid;
+        document.getElementById('profile-total-referrals').textContent = totalReferrals;
+        document.getElementById('profile-total-bonus').textContent = bonusEarned.toFixed(2);
 
-    // <<<< منطق قدیمی این بخش حذف شده و با فراخوانی تابع جدید جایگزین می‌شود >>>>
-    renderExchangeAccountZone(data);
-    renderWithdrawalZone(data);
-  };
+        renderExchangeAccountZone(data);
+        renderWithdrawalZone(data);
+    };
    
-  const renderExchangeAccountZone = (data) => {
+    const renderExchangeAccountZone = (data) => {
         const { rewardUid, email } = data;
         const exchangeAccountContent = document.getElementById('exchange-account-content');
         const hasAccountInfo = rewardUid && email;
@@ -559,26 +667,26 @@ document.addEventListener('DOMContentLoaded', () => {
             exchangeAccountContent.innerHTML = `
                 <div class="space-y-3 text-sm">
                     <div>
-                        <label class="text-green-300/60 mono text-xs">UID</label>
-                        <p class="mono bg-black/30 p-2 rounded-md border border-green-900/50">${rewardUid}</p>
+                        <label class="text-gray-400 mono text-xs">UID</label>
+                        <p class="mono bg-black p-2 rounded-md border border-gray-700">${rewardUid}</p>
                     </div>
                     <div>
-                        <label class="text-green-300/60 mono text-xs">EMAIL</label>
-                        <p class="mono bg-black/30 p-2 rounded-md border border-green-900/50">${email}</p>
+                        <label class="text-gray-400 mono text-xs">EMAIL</label>
+                        <p class="mono bg-black p-2 rounded-md border border-gray-700">${email}</p>
                     </div>
-                    <p class="text-xs text-green-300/70 text-center mono pt-2">Contact support to change details.</p>
+                    <p class="text-xs text-gray-400 text-center mono pt-2">Contact support to change details.</p>
                 </div>`;
         } else {
             exchangeAccountContent.innerHTML = `
-                <p class="text-sm text-green-300/70 mb-4 mono">Submit UID & Email for data transfer.</p>
+                <p class="text-sm text-gray-300 mb-4 mono">Submit UID & Email for data transfer.</p>
                 <div class="space-y-4">
                     <div>
-                        <input type="text" id="uid-input" placeholder="ENTER YOUR UID" class="w-full p-3 bg-black/30 border border-green-900/50 rounded-lg text-green-300 placeholder-green-300/40 mono focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+                        <input type="text" id="uid-input" placeholder="ENTER YOUR UID" class="w-full p-3 bg-black border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 mono focus:ring-2 focus:border-opacity-100 outline-none" style="focus:ring-color: #01bc8d; focus:border-color: #01bc8d;">
                     </div>
                     <div>
-                        <input type="email" id="email-input" placeholder="ENTER YOUR EMAIL" class="w-full p-3 bg-black/30 border border-green-900/50 rounded-lg text-green-300 placeholder-green-300/40 mono focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+                        <input type="email" id="email-input" placeholder="ENTER YOUR EMAIL" class="w-full p-3 bg-black border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 mono focus:ring-2 focus:border-opacity-100 outline-none" style="focus:ring-color: #01bc8d; focus:border-color: #01bc8d;">
                     </div>
-                    <button id="save-verify-btn" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-black font-bold py-3 rounded-lg hover:shadow-lg transition-all press-effect mono flex items-center justify-center">
+                    <button id="save-verify-btn" class="w-full text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all press-effect mono flex items-center justify-center" style="background: linear-gradient(to right, #01bc8d, #00a67a);">
                         <span>SAVE & VERIFY</span>
                     </button>
                 </div>`;
@@ -587,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderWithdrawalZone = (data) => {
-        const { bonusEarned, withdrawalThreshold, withdrawalHistory, rewardUid, email } = data;
+        const { bonusEarned, withdrawalThreshold = 5, withdrawalHistory = [], rewardUid, email } = data;
         const requestView = document.getElementById('w-tab-request-view');
         const historyView = document.getElementById('w-tab-history-view');
         const hasAccountInfo = rewardUid && email;
@@ -595,27 +703,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let requestHtml = `
             <div class="text-center mb-4">
-                <p class="text-xs text-green-300/70 mono">CURRENT BALANCE</p>
-                <p class="text-3xl font-bold text-green-400 mono">$${bonusEarned.toFixed(2)}</p>
+                <p class="text-xs text-gray-400 mono">CURRENT BALANCE</p>
+                <p class="text-3xl font-bold text-white mono">${bonusEarned.toFixed(2)}</p>
             </div>
             <div class="flex justify-center items-center space-x-2 mb-4">`;
         
         for (let i = 1; i <= withdrawalThreshold; i++) {
             const filled = bonusEarned >= i;
-            requestHtml += `<div class="w-8 h-8 flex items-center justify-center rounded-lg ${filled ? 'bg-green-500 matrix-glow' : 'bg-black/30 border border-green-900/50'}">
-                <span class="${filled ? 'text-black' : 'text-green-300/40'} font-bold text-sm">${filled ? '$' : '-'}</span>
+            requestHtml += `<div class="w-8 h-8 flex items-center justify-center rounded-lg ${filled ? 'matrix-glow' : 'bg-black border border-gray-700'}" style="${filled ? 'background-color: #01bc8d;' : ''}">
+                <span class="${filled ? 'text-white' : 'text-gray-500'} font-bold text-sm">${filled ? '✓' : '-'}</span>
             </div>`;
         }
 
         requestHtml += `</div>
-            <button id="request-withdrawal-btn" class="w-full bg-gradient-to-r ${canWithdraw ? 'from-green-600 to-green-700' : 'from-gray-600 to-gray-700'} text-black font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''}>
+            <button id="request-withdrawal-btn" class="w-full text-white font-bold py-3 rounded-lg ${canWithdraw ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'} transition-all press-effect mono flex items-center justify-center" ${!canWithdraw ? 'disabled' : ''} style="background: ${canWithdraw ? 'linear-gradient(to right, #01bc8d, #00a67a)' : 'linear-gradient(to right, #666, #555)'};">
                 <span>REQUEST WITHDRAWAL</span>
             </button>`;
         
         if (!hasAccountInfo) {
-            requestHtml += `<p class="text-xs text-yellow-400/80 text-center mono mt-2">Please set your Exchange Account first.</p>`;
+            requestHtml += `<p class="text-xs text-yellow-400 text-center mono mt-2">Please set your Exchange Account first.</p>`;
         } else if (bonusEarned < withdrawalThreshold) {
-            requestHtml += `<p class="text-xs text-green-300/70 text-center mono mt-2">$${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
+            requestHtml += `<p class="text-xs text-gray-400 text-center mono mt-2">${(withdrawalThreshold - bonusEarned).toFixed(2)} more needed to withdraw.</p>`;
         }
         
         requestView.innerHTML = requestHtml;
@@ -631,16 +739,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     'rejected': { color: 'text-red-400', text: 'REJECTED' }
                 };
                 const currentStatus = statusInfo[item.status] || { color: 'text-gray-400', text: 'UNKNOWN' };
-                return `<div class="flex justify-between items-center p-3 bg-black/20 rounded-lg border border-green-900/30">
+                return `<div class="flex justify-between items-center p-3 bg-black rounded-lg border border-gray-700">
                             <div>
-                                <p class="font-bold text-green-300 mono">$${parseFloat(item.amount).toFixed(2)}</p>
-                                <p class="text-xs text-green-300/60 mono">${new Date(item.request_date).toLocaleDateString()}</p>
+                                <p class="font-bold text-gray-300 mono">${parseFloat(item.amount).toFixed(2)}</p>
+                                <p class="text-xs text-gray-400 mono">${new Date(item.request_date).toLocaleDateString()}</p>
                             </div>
                             <p class="text-xs font-semibold mono ${currentStatus.color}">${currentStatus.text}</p>
                         </div>`;
             }).join('') + '</div>';
         } else {
-            historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-green-300/70 mono">NO HISTORY</p></div>`;
+            historyView.innerHTML = `<div class="text-center py-6"><div class="text-3xl mb-2">📜</div><p class="text-sm text-gray-300 mono">NO HISTORY</p></div>`;
         }
     };
 
@@ -652,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!uid || !email) { return showToast('Please fill in both UID and Email fields.', 'error'); }
 
         button.disabled = true;
-        button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
+        button.innerHTML = '<div class="spinner w-6 h-6 border-2 border-white/20 rounded-full mx-auto"></div>';
         
         try {
             await api('save_exchange_account', { body: { uid, email } });
@@ -701,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleRequestWithdrawal(e) {
         const btn = e.currentTarget;
         btn.disabled = true;
-        btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-black/20 rounded-full mx-auto"></div>';
+        btn.innerHTML = '<div class="spinner w-6 h-6 border-2 border-white/20 rounded-full mx-auto"></div>';
         
         try {
             const result = await api('request_withdrawal');
@@ -714,33 +822,33 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Withdrawal request failed. Please try again.', 'error');
         }
     }
-    const createReferralItem = (user) => {
-        const badge = user.verified ? `<span class="text-xs bg-green-500/30 text-green-400 px-2 py-1 rounded-full border border-green-500/50 mono">ACTIVE</span>` : `<span class="text-xs bg-yellow-500/30 text-yellow-400 px-2 py-1 rounded-full border border-yellow-500/50 mono">PENDING</span>`;
-        return `<div class="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-green-900/30"><div class="flex items-center min-w-0"><div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 matrix-border">${user.name.charAt(0) || '?'}</div><div class="ml-3 min-w-0"><div class="font-semibold text-green-300 mono truncate">${user.name}</div><div class="text-xs text-green-300/60 mono">Joined: ${user.joinDate}</div></div></div><div class="flex-shrink-0">${badge}</div></div>`;
-    };
-    const verifyUser = () => {
-        holdIcon.textContent = '✅';
-        setTimeout(async () => {
-            verificationScreen.classList.add('hidden');
-            loadingDataScreen.style.display = 'flex';
-            
-            const userData = await fetchUserData();
 
-            loadingDataScreen.style.display = 'none';
+    const createReferralItem = (user) => {
+        const badge = user.verified ? 
+            `<span class="text-xs px-2 py-1 rounded-full border mono text-white status-badge-active">ACTIVE</span>` : 
+            `<span class="text-xs px-2 py-1 rounded-full border mono status-badge-pending">PENDING</span>`;
+        return `<div class="flex items-center justify-between p-3 bg-black rounded-lg border border-gray-700 hover-lift">
+                    <div class="flex items-center min-w-0">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">${user.name.charAt(0) || '?'}</div>
+                        <div class="ml-3 min-w-0">
+                            <div class="font-semibold text-gray-300 mono truncate">${user.name}</div>
+                            <div class="text-xs text-gray-400 mono">Joined: ${user.joinDate}</div>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">${badge}</div>
+                </div>`;
+    };
+
+    async function initApp() {
+        verificationScreen.style.display = 'none';
+        loadingDataScreen.style.display = 'flex';
+        try {
+            const userData = await fetchUserData();
             if (userData) {
                 populateData(userData);
+                loadingDataScreen.style.display = 'none';
                 mainApp.classList.remove('hidden');
             }
-        }, 500);
-    };
-    async function initApp() {
-        document.getElementById('verification-screen').style.display = 'none';
-        document.getElementById('loading-data-screen').style.display = 'flex';
-        try {
-            const userData = await api('get_user_data');
-            populateData(userData);
-            document.getElementById('loading-data-screen').style.display = 'none';
-            mainApp.classList.remove('hidden');
         } catch (error) {
             showError("Matrix connection failed. Retry authentication.");
         }
@@ -748,58 +856,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startHolding = () => {
         if (holdInterval) return;
+        isHolding = true;
+        
         holdInterval = setInterval(() => {
             holdProgress += (INTERVAL_TIME / TOTAL_HOLD_TIME) * 100;
             const progress = Math.min(holdProgress, 100);
-            document.getElementById('progress-circle').style.strokeDashoffset = 314 - (progress / 100) * 314;
-            document.getElementById('progress-text').textContent = `${Math.floor((progress/100)* (TOTAL_HOLD_TIME/1000))}/2 SEC`;
-            if (holdProgress >= 100) { clearInterval(holdInterval); initApp(); }
+            
+            // Fixed progress circle calculation
+            const circumference = 2 * Math.PI * 60; // radius is 60
+            const offset = circumference - (progress / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+            
+            const seconds = Math.ceil((progress / 100) * 4);
+            progressText.textContent = `${Math.min(seconds, 4)}/4 SEC`;
+            
+            if (holdProgress >= 100) {
+                clearInterval(holdInterval);
+                holdIcon.textContent = '✅';
+                setTimeout(() => {
+                    initApp();
+                }, 500);
+            }
         }, INTERVAL_TIME);
     };
+
     const stopHolding = () => {
+        if (!isHolding) return;
+        
         clearInterval(holdInterval);
         holdInterval = null;
+        isHolding = false;
+        
         if (holdProgress < 100) {
             holdProgress = 0;
-            document.getElementById('progress-circle').style.strokeDashoffset = 314;
-            document.getElementById('progress-text').textContent = `0/2 SEC`;
+            const circumference = 2 * Math.PI * 60;
+            progressCircle.style.strokeDashoffset = circumference;
+            progressText.textContent = '0/4 SEC';
+            holdIcon.textContent = '⚡';
         }
     };
-    
-    const updateProgressUI = () => {
-        const progress = Math.min(holdProgress, 100);
-        const radius = 50;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (progress / 100) * circumference;
-        progressCircle.style.strokeDashoffset = offset;
-        const seconds = Math.floor((progress / 100) * (TOTAL_HOLD_TIME / 1000));
-        progressText.textContent = `${seconds}/4 SEC`;
-    };
-    
 
     // Event Listeners
     holdButton.addEventListener('mousedown', startHolding);
     holdButton.addEventListener('mouseup', stopHolding);
     holdButton.addEventListener('mouseleave', stopHolding);
-    holdButton.addEventListener('touchstart', (e) => { e.preventDefault(); startHolding(); }, { passive: false });
-    holdButton.addEventListener('touchend', (e) => { e.preventDefault(); stopHolding(); });
+    holdButton.addEventListener('touchstart', (e) => { 
+        e.preventDefault(); 
+        startHolding(); 
+    }, { passive: false });
+    holdButton.addEventListener('touchend', (e) => { 
+        e.preventDefault(); 
+        stopHolding(); 
+    });
+    
     document.getElementById('profile-tab').addEventListener('click', e => {
         const tabBtn = e.target.closest('.w-tab-btn');
         if (tabBtn) {
             const tabId = tabBtn.dataset.wTab;
             document.querySelectorAll('.w-tab-btn').forEach(btn => {
-                btn.classList.remove('text-green-400', 'border-green-400');
-                btn.classList.add('text-green-300/60', 'border-transparent');
+                btn.classList.remove('text-white');
+                btn.style.borderColor = 'transparent';
+                btn.classList.add('text-gray-400');
             });
-            tabBtn.classList.add('text-green-400', 'border-green-400');
-            tabBtn.classList.remove('text-green-300/60', 'border-transparent');
+            tabBtn.classList.add('text-white');
+            tabBtn.style.borderColor = '#01bc8d';
+            tabBtn.classList.remove('text-gray-400');
             
             document.getElementById('w-tab-request-view').classList.toggle('hidden', tabId !== 'request');
             document.getElementById('w-tab-history-view').classList.toggle('hidden', tabId !== 'history');
         }
     });
-
-    // <<<< پایان کد جدید برای جایگزینی >>>> 
 
     retryButton.addEventListener('click', () => {
         errorScreen.style.display = 'none';
@@ -820,23 +946,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabToActivate = button.dataset.tab;
         
         navMenu.querySelectorAll('.nav-button').forEach(btn => { 
-            btn.classList.remove('text-green-400', 'bg-green-400/20'); 
-            btn.classList.add('text-green-300/60', 'hover:text-green-400'); 
+            btn.classList.remove('text-white', 'nav-active');
+            btn.classList.add('text-gray-400', 'hover:text-white'); 
         });
         Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
         
-        button.classList.add('text-green-400', 'bg-green-400/20');
-        button.classList.remove('text-green-300/60', 'hover:text-green-400');
+        button.classList.add('text-white', 'nav-active');
+        button.classList.remove('text-gray-400', 'hover:text-white');
         tabs[tabToActivate].classList.remove('hidden');
     });
 
     copyButton.addEventListener('click', () => {
         navigator.clipboard.writeText(`https://t.me/cointestpashabot?start=${currentData.uid}`).then(() => {
-            copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"/></svg>`;
+            copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>`;
             toast.classList.remove('opacity-0');
             setTimeout(() => {
                 toast.classList.add('opacity-0');
-                copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+                copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
             }, 2000);
         });
     });
