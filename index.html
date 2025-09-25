@@ -648,14 +648,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('home-bonus').textContent = bonusEarned.toFixed(2);
         document.getElementById('home-referrals').textContent = verifiedCount;
-       
+    
         const currentProgress = verifiedCount % bonusThreshold;
         const needed = bonusThreshold - currentProgress;
-        const progressPercentage = (currentProgress / bonusThreshold) * 100;
-       
+    
         document.getElementById('home-needed-referrals').textContent = (needed === bonusThreshold && verifiedCount > 0) ? 0 : needed;
-        document.getElementById('home-progress-bar').style.width = progressPercentage + '%';
-        document.getElementById('home-progress-text').textContent = currentProgress;
+        document.getElementById('home-progress-bar').style.width = `${(currentProgress / bonusThreshold) * 100}%`;
+    
+        const homeProgressTextContainer = document.querySelector('#home-tab .flex.justify-between.text-xs');
+        homeProgressTextContainer.innerHTML = `<span class="mono"><span id="home-progress-text">${currentProgress}</span>/${bonusThreshold}</span><span class="text-green-400 font-semibold mono">+$${bonusAmount.toFixed(2)}</span>`;
+    
        
         const recentList = document.getElementById('recent-referrals-list');
         recentList.innerHTML = '';
