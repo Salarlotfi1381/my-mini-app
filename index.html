@@ -7,26 +7,26 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
         
         :root {
             --matrix-green: #01bc8d;
-            --matrix-dark: #1a1a1a;
-            --matrix-darker: #0a0a0a;
+            --matrix-dark: #000000;
+            --matrix-darker: #000000;
             --matrix-green-glow: rgba(1, 188, 141, 0.4);
             --matrix-green-dim: rgba(1, 188, 141, 0.15);
             --matrix-white: #ffffff;
-            --matrix-gray: #2a2a2a;
+            --matrix-gray: #262626;
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overscroll-behavior: none;
             user-select: none;
             -webkit-user-select: none;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2a2a2a 70%, #1a1a1a 100%);
+            background: #000000;
             min-height: 100vh;
         }
 
@@ -56,11 +56,8 @@
         }
         
         .glass-card {
-            background: linear-gradient(145deg, 
-                rgba(42, 42, 42, 0.9) 0%, 
-                rgba(26, 26, 26, 0.85) 50%, 
-                rgba(42, 42, 42, 0.9) 100%);
-            backdrop-filter: blur(20px);
+            background: #262626;
+            backdrop-filter: none;
             border: 1px solid rgba(1, 188, 141, 0.25);
             position: relative;
             overflow: hidden;
@@ -175,7 +172,7 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--matrix-dark);
+            background: #000000;
             border-radius: 4px;
         }
 
@@ -246,6 +243,25 @@
             color: #ffc107;
             text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
         }
+        .nav-button {
+        min-width: 80px;
+        border-radius: 12px;
+        }
+
+        .nav-active {
+            background: rgba(1, 188, 141, 0.2) !important;
+            border: 1px solid rgba(1, 188, 141, 0.3);
+        }
+
+        .nav-active div {
+            background: #01bc8d !important;
+            border: none !important;
+        }
+
+        .nav-button:hover:not(.nav-active) div {
+            border-color: #01bc8d;
+            background: rgba(1, 188, 141, 0.1);
+        }
     </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -306,7 +322,7 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <h2 class="text-lg sm:text-2xl font-bold text-white mono">WELCOME <span id="home-username" class="text-gray-300"></span>! ⚡</h2>
-                            <p class="text-gray-400 text-xs sm:text-sm">Neural Link Dashboard Active</p>
+                            <p class="text-gray-400 text-xs sm:text-sm"> Welcome to our referral bot</p>
                         </div>
                     </div>
                 </div>
@@ -318,20 +334,20 @@
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
                                 <span class="text-black font-bold text-sm">$</span>
                             </div>
-                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Rewards</span>
+                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Reward Earned</span>
                         </div>
                         <div class="text-xl sm:text-3xl font-bold text-white mono">$<span id="home-bonus">0</span></div>
-                        <div class="text-xs text-gray-400">Matrix Bonus</div>
+                        <div class="text-xs text-gray-400">Bonus Fees</div>
                     </div>
                     <div class="glass-card rounded-xl p-3 sm:p-4 shadow-lg hover-lift animated-bg">
                         <div class="flex items-center mb-2">
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
                                 <span class="text-white font-bold text-sm">👥</span>
                             </div>
-                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Active</span>
+                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Your Referrals</span>
                         </div>
                         <div class="text-xl sm:text-3xl font-bold text-white mono" id="home-referrals">0</div>
-                        <div class="text-xs text-gray-400"><span id="home-needed-referrals">10</span> more needed</div>
+                        <div class="text-xs text-gray-400"><span id="home-needed-referrals">10</span> to next reward</div>
                     </div>
                 </div>
 
@@ -339,7 +355,7 @@
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
                     <h3 class="font-bold text-white mb-3 flex items-center mono text-sm sm:text-base">
                         <span class="w-2 h-2 rounded-full mr-2 animate-pulse" style="background-color: #01bc8d;"></span>
-                        NEXT REWARD PROGRESS
+                        Progress to next reward
                     </h3>
                     <div class="w-full bg-gray-800 rounded-full h-3 sm:h-4 mb-2 border border-gray-700 overflow-hidden">
                         <div id="home-progress-bar" class="h-full rounded-full transition-all duration-1000 progress-bar" style="width: 0%;"></div>
@@ -367,7 +383,7 @@
                 <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-lg matrix-glow hover-lift">
                     <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center mono text-white">
                         <div class="w-6 h-6 mr-2 rounded rotate-45 flex-shrink-0" style="background-color: #01bc8d;"></div>
-                        YOUR MATRIX LINK
+                        YOUR REFERRAL LINK
                     </h2>
                     <div class="bg-black backdrop-blur-sm rounded-lg p-3 sm:p-4 mb-4 border border-gray-700">
                         <div class="text-xs mb-2 text-gray-400 mono">INVITATION CODE:</div>
@@ -400,7 +416,7 @@
 
                 <!-- Network Nodes -->
                 <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
-                    <h3 class="font-bold text-white mb-3 mono text-sm sm:text-base">NETWORK NODES</h3>
+                    <h3 class="font-bold text-white mb-3 mono text-sm sm:text-base">MEMBER LIST</h3>
                     <div id="full-referrals-list" class="space-y-2 sm:space-y-3 max-h-80 overflow-y-auto"></div>
                 </div>
             </div>
@@ -417,7 +433,7 @@
                     <h3 class="font-bold text-white mb-3 mono">ACCOUNT STATS</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg border border-gray-700">
-                            <span class="text-gray-300 text-sm mono">Total Nodes</span>
+                            <span class="text-gray-300 text-sm mono">Total Member</span>
                             <span class="font-bold text-white mono" id="profile-total-referrals"></span>
                         </div>
                         <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg border border-gray-700">
@@ -446,23 +462,43 @@
         </div>
 
         <!-- Bottom Navigation -->
-        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto backdrop-blur-sm border-t border-gray-700 px-3 sm:px-4 pt-2 pb-3 sm:pb-4" style="background: linear-gradient(to top, rgba(10, 10, 10, 0.95), rgba(26, 26, 26, 0.9));">
-            <div id="nav-menu" class="flex justify-around">
-                <button data-tab="home" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-white press-effect nav-active">
-                    <div class="w-5 h-5 sm:w-6 sm:h-6 rounded" style="background-color: #01bc8d;"></div>
-                    <span class="text-xs mono">HOME</span>
+        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto backdrop-blur-sm border-t border-gray-700 px-3 sm:px-4 pt-3 pb-4" style="background: rgba(26, 26, 26, 0.95);">
+            <div id="nav-menu" class="flex justify-around items-center">
+
+                <button data-tab="profile" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-gray-400 hover:text-white press-effect">
+                    <div class="w-8 h-8 rounded-lg border-2 border-gray-500 flex items-center justify-center mb-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold">USER</span>
                 </button>
-                <button data-tab="referral" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-gray-400 hover:text-white press-effect">
-                    <div class="w-5 h-5 sm:w-6 sm:h-6 border-2 border-current rounded"></div>
-                    <span class="text-xs mono">LINK</span>
+
+                <button data-tab="home" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-white press-effect nav-active">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold">HOME</span>
                 </button>
-                <button data-tab="profile" class="nav-button flex flex-col items-center space-y-1 p-2 rounded-lg transition-all w-16 sm:w-20 text-gray-400 hover:text-white press-effect">
-                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-current rounded-full"></div>
-                    <span class="text-xs mono">USER</span>
+                
+                <button data-tab="referral" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-gray-400 hover:text-white press-effect">
+                    <div class="w-8 h-8 rounded-lg border-2 border-gray-500 flex items-center justify-center mb-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold">LINK</span>
                 </button>
+                
             </div>
         </div>
-    </div>
+ </div>
     
     <!-- Toast -->
     <div id="toast" class="fixed bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 text-white font-bold py-3 px-6 rounded-full shadow-lg opacity-0 transition-opacity duration-300 mono text-sm matrix-glow" style="background: linear-gradient(to right, #01bc8d, #00a67a);">LINK COPIED!</div>
