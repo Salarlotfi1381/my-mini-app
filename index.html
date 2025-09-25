@@ -669,21 +669,20 @@ document.addEventListener('DOMContentLoaded', () => {
             recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your Bot link to begin</p></div>`;
         }
        
-        // Referral Tab
+         // Referral Tab
         document.getElementById('referral-link-text').textContent = referralLink;
-        copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+        copyButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
         document.getElementById('stats-total').textContent = totalReferrals;
         document.getElementById('stats-verified').textContent = verifiedCount;
         document.getElementById('stats-pending').textContent = totalReferrals - verifiedCount;
+        document.querySelector('#referral-tab .text-center').textContent = `${bonusThreshold} VERIFIED NODES = $${bonusAmount.toFixed(2)} REWARD`;
 
         const fullList = document.getElementById('full-referrals-list');
         fullList.innerHTML = '';
         if (referredUsers && referredUsers.length > 0) {
-            referredUsers.forEach(user => { 
-                fullList.innerHTML += createReferralItem(user); 
-            });
+        referredUsers.forEach(user => { fullList.innerHTML += createReferralItem(user, 'large'); });
         } else {
-            fullList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-gray-300 mono">NO NETWORK NODES</p><p class="text-xs text-gray-400">Expand your Bot network</p></div>`;
+        fullList.innerHTML = `<div class="text-center py-6 bg-black/20 rounded-lg border border-green-900/30"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-green-300/70 mono">NO NETWORK NODES</p><p class="text-xs text-green-300/50">Expand your matrix network</p></div>`;
         }
 
         // Profile Tab
