@@ -294,8 +294,8 @@
     <div id="loading-data-screen" class="hidden flex-col items-center justify-center min-h-screen p-6">
         <div class="glass-card rounded-2xl p-8 text-center matrix-glow">
             <div class="spinner w-16 h-16 border-4 border-gray-700 rounded-full mb-6 mx-auto"></div>
-            <p class="font-semibold text-white mono typing-effect text-lg">INITIALIZING MATRIX...</p>
-            <div class="mt-3 text-sm text-gray-300">Connecting to the neural network...</div>
+            <p class="font-semibold text-white mono typing-effect text-lg">coinlocally...</p>
+            <div class="mt-3 text-sm text-gray-300">Connecting to the coinlocally bot...</div>
         </div>
     </div>
     
@@ -304,7 +304,7 @@
         <div class="glass-card rounded-2xl p-6 sm:p-8 text-center max-w-sm w-full matrix-glow">
             <div class="text-4xl sm:text-5xl mb-4">💀</div>
             <h2 class="text-xl font-bold mb-2 text-red-400 mono">CONNECTION FAILED</h2>
-            <p id="error-message" class="text-gray-300 mb-6 text-sm">Matrix connection interrupted. Retry authentication.</p>
+            <p id="error-message" class="text-gray-300 mb-6 text-sm">Bot connection interrupted. Retry authentication.</p>
             <button id="retry-button" class="w-full text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition-all press-effect mono" style="background: linear-gradient(to right, #01bc8d, #00a67a);">RETRY CONNECTION</button>
         </div>
     </div>
@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 recentList.innerHTML += createReferralItem(user); 
             });
         } else {
-            recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your matrix link to begin</p></div>`;
+            recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your Bot link to begin</p></div>`;
         }
        
         // Referral Tab
@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fullList.innerHTML += createReferralItem(user); 
             });
         } else {
-            fullList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-gray-300 mono">NO NETWORK NODES</p><p class="text-xs text-gray-400">Expand your matrix network</p></div>`;
+            fullList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🌐</div><p class="text-sm text-gray-300 mono">NO NETWORK NODES</p><p class="text-xs text-gray-400">Expand your Bot network</p></div>`;
         }
 
         // Profile Tab
