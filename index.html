@@ -37,8 +37,16 @@
         .main-container {
             max-width: 428px;
             margin: 0 auto;
-            min-height: 100vh;
+            height: 100vh; /* ارتفاع را به اندازه کل صفحه ثابت می‌کند */
+            display: flex; /* چیدمان را فلکس می‌کند */
+            flex-direction: column; /* آیتم‌ها را زیر هم می‌چیند */
+            overflow: hidden; /* از اسکرول شدن خود این کادر جلوگیری می‌کند */
             position: relative;
+        }
+
+        .scrollable-content {
+            flex-grow: 1; /* باعث می‌شود این بخش تمام فضای خالی را پر کند */
+            overflow-y: auto; /* اسکرول عمودی را فقط برای این بخش فعال می‌کند */
         }
         
         .matrix-glow {
@@ -56,7 +64,7 @@
         }
         
         .glass-card {
-            background: #262626;
+            background: transparent;
             backdrop-filter: none;
             border: 1px solid rgba(1, 188, 141, 0.25);
             position: relative;
@@ -96,23 +104,6 @@
             100% { left: 100%; opacity: 0; }
         }
 
-        @keyframes matrix-rain {
-            0% { transform: translateY(-100%); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(100vh); opacity: 0; }
-        }
-
-        .matrix-rain {
-            position: fixed;
-            top: 0;
-            font-family: 'Inter', sans-serif;
-            color: var(--matrix-green);
-            font-size: 12px;
-            z-index: -1;
-            animation: matrix-rain 6s linear infinite;
-            text-shadow: 0 0 5px var(--matrix-green);
-        }
 
         @keyframes pulse-green {
             0%, 100% { 
@@ -214,16 +205,16 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-
-        /* Enhanced navigation */
-        .nav-active {
-            background: linear-gradient(135deg, 
-                rgba(1, 188, 141, 0.3) 0%, 
-                rgba(1, 188, 141, 0.15) 100%) !important;
-            box-shadow: 
-                0 0 15px rgba(1, 188, 141, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        .bg-card {
+            /* ایجاد یک گرادینت مورب از بالا-چپ به پایین-راست */
+            /* این گرادینت از رنگ پس‌زمینه اصلی (#000000) شروع شده و به رنگ مورد نظر شما (#262626) ختم می‌شود */
+            background: linear-gradient(to bottom left, #000000, #262626);
+            
+            /* اضافه کردن یک کادر بسیار محو برای تعریف بهتر لبه‌ها */
+            border: 1px solid #262626;
         }
+  
+
 
         /* Badge enhancements */
         .status-badge-active {
@@ -243,30 +234,55 @@
             color: #ffc107;
             text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
         }
-        .nav-button {
-        min-width: 80px;
-        border-radius: 12px;
+
+            /* --- کد نهایی و اصلاح شده منوی پایین --- */
+        .bottom-nav-container {
+            background-color: #1C1C1E; /* رنگ پس زمینه منو */
+            border-radius: 24px; /* گردی گوشه ها */
+            padding: 8px;
+            margin: 0 16px 16px 16px; /* فاصله از اطراف صفحه */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .nav-active {
-            background: rgba(1, 188, 141, 0.2) !important;
-            border: 1px solid rgba(1, 188, 141, 0.3);
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #8A8A8E; /* رنگ متن غیرفعال */
+            font-size: 12px;
+            font-weight: 500;
+            flex: 1; /* باعث می شود دکمه ها تمام فضا را پر کنند */
+            height: 55px; /* ارتفاع هر دکمه */
+            transition: color 0.3s ease;
+            cursor: pointer;
+            background: none; /* حذف هرگونه پس زمینه */
+            border: none; /* حذف هرگونه کادر */
         }
 
-        .nav-active div {
-            background: #01bc8d !important;
-            border: none !important;
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: #8A8A8E; /* رنگ آیکون غیرفعال */
+            fill: none;
+            stroke-width: 1.5;
+            transition: stroke 0.3s ease;
         }
 
-        .nav-button:hover:not(.nav-active) div {
-            border-color: #01bc8d;
-            background: rgba(1, 188, 141, 0.1);
+        /* --- استایل حالت فعال (Active) --- */
+        .nav-item.active {
+            color: var(--matrix-green); /* رنگ متن فعال (سبز) */
         }
+
+        .nav-item.active svg {
+            stroke: var(--matrix-green); /* رنگ آیکون فعال (سبز) */
+        }
+
     </style>
 </head>
 <body class="text-white overflow-x-hidden">
-    <!-- Matrix Rain Background -->
-    <div id="matrix-bg" class="fixed inset-0 pointer-events-none z-0"></div>
 
     <!-- =========== Human Verification Screen =========== -->
     <div id="verification-screen" class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 relative z-10">
@@ -311,11 +327,11 @@
 
     <!-- =========== Main App =========== -->
     <div id="main-app" class="main-container min-h-screen hidden">
-        <div class="pb-20 sm:pb-24">
+        <div class="scrollable-content  pb-20 sm:pb-24">
             <!-- Home Tab -->
             <div id="home-tab" class="p-3 sm:p-4 space-y-4">
                 <!-- Welcome Card -->
-                <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-lg matrix-glow hover-lift animated-bg">
+                <div class=" rounded-2xl p-4 sm:p-6 shadow-lg  hover-lift animated-bg">
                     <div class="flex items-center gap-3 sm:gap-4">
                         <div id="home-avatar" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex-shrink-0 flex items-center justify-center text-lg sm:text-xl font-bold matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
                             <!-- Filled by JS -->
@@ -329,30 +345,22 @@
 
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div class="glass-card rounded-xl p-3 sm:p-4 shadow-lg hover-lift animated-bg">
-                        <div class="flex items-center mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
-                                <span class="text-black font-bold text-sm">$</span>
-                            </div>
-                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Reward Earned</span>
-                        </div>
-                        <div class="text-xl sm:text-3xl font-bold text-white mono">$<span id="home-bonus">0</span></div>
-                        <div class="text-xs text-gray-400">Bonus Fees</div>
+                    
+                    <div class="rounded-2xl p-4 text-white text-center" style="background: linear-gradient(145deg, #01bc8d, #01bc8d);">
+                        <p class="font-semibold text-base">Your Referrals</p>
+                        <p class="text-3xl font-bold my-2" id="home-referrals">0</p>
+                        <p class="text-sm"><span id="home-needed-referrals">10</span> to next reward</p>
                     </div>
-                    <div class="glass-card rounded-xl p-3 sm:p-4 shadow-lg hover-lift animated-bg">
-                        <div class="flex items-center mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 flex-shrink-0" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">
-                                <span class="text-white font-bold text-sm">👥</span>
-                            </div>
-                            <span class="font-semibold text-xs sm:text-sm text-gray-300">Your Referrals</span>
-                        </div>
-                        <div class="text-xl sm:text-3xl font-bold text-white mono" id="home-referrals">0</div>
-                        <div class="text-xs text-gray-400"><span id="home-needed-referrals">10</span> to next reward</div>
-                    </div>
+                    <!-- کد جدید برای کارت Reward Earned -->
+                <div class="rounded-2xl p-4 text-white text-center bg-card">
+                    <p class="font-semibold text-base text-gray-300">Reward Earned</p>
+                    <p class="text-3xl font-bold my-2">$<span id="home-bonus">0</span></p>
+                    <p class="text-sm text-gray-400">Bonus Fees</p>
+                </div>
                 </div>
 
                 <!-- Progress Card -->
-                <div class="glass-card rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
+                <div class=" rounded-xl p-4 sm:p-5 shadow-lg hover-lift">
                     <h3 class="font-bold text-white mb-3 flex items-center mono text-sm sm:text-base">
                         <span class="w-2 h-2 rounded-full mr-2 animate-pulse" style="background-color: #01bc8d;"></span>
                         Progress to next reward
@@ -462,40 +470,39 @@
         </div>
 
         <!-- Bottom Navigation -->
-        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto backdrop-blur-sm border-t border-gray-700 px-3 sm:px-4 pt-3 pb-4" style="background: rgba(26, 26, 26, 0.95);">
-            <div id="nav-menu" class="flex justify-around items-center">
-
-                <button data-tab="profile" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-gray-400 hover:text-white press-effect">
-                    <div class="w-8 h-8 rounded-lg border-2 border-gray-500 flex items-center justify-center mb-2">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
+        <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto">
+            <div id="nav-menu" class="bottom-nav-container flex justify-around items-center">
+                
+                <!-- USER Button -->
+                <button data-tab="profile" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">USER</span>
+                    <span>USER</span>
                 </button>
 
-                <button data-tab="home" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-white press-effect nav-active">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <!-- HOME Button -->
+                <button data-tab="home" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <svg viewBox="0 0 24 24">
                             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">HOME</span>
+                    <span>HOME</span>
                 </button>
-                
-                <button data-tab="referral" class="nav-button flex flex-col items-center p-3 rounded-xl transition-all text-gray-400 hover:text-white press-effect">
-                    <div class="w-8 h-8 rounded-lg border-2 border-gray-500 flex items-center justify-center mb-2">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+
+                <!-- LINK Button -->
+                <button data-tab="referral" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">LINK</span>
+                    <span>LINK</span>
                 </button>
-                
+
             </div>
         </div>
  </div>
@@ -505,30 +512,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Enhanced Matrix Rain Effect
-    function createMatrixRain() {
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン$£¥€';
-        const matrixBg = document.getElementById('matrix-bg');
-        
-        function addRain() {
-            if (document.querySelectorAll('.matrix-rain').length > 50) return;
-            
-            const rain = document.createElement('div');
-            rain.className = 'matrix-rain';
-            rain.style.left = Math.random() * 100 + 'vw';
-            rain.style.animationDuration = (Math.random() * 4 + 3) + 's';
-            rain.style.opacity = Math.random() * 0.7 + 0.2;
-            rain.style.fontSize = (Math.random() * 8 + 10) + 'px';
-            rain.textContent = chars[Math.floor(Math.random() * chars.length)];
-            matrixBg.appendChild(rain);
-            
-            setTimeout(() => rain.remove(), 7000);
-        }
-        
-        setInterval(addRain, 150);
-    }
-    createMatrixRain();
-
     // Telegram Web App Setup
     const tg = window.Telegram?.WebApp || {
         initDataUnsafe: { user: { id: 123456, first_name: "Neo", photo_url: null } },
@@ -578,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     async function fetchUserData() {
-        const BACKEND_URL = 'https://b26a21911e41.ngrok-free.app/get_user_data';
+        const BACKEND_URL = 'https://98a86e08ddc0.ngrok-free.app/get_user_data';
 
         if (!tg.initData || tg.initData === 'mock_init_data') {
             // Mock data for demo
@@ -666,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 recentList.innerHTML += createReferralItem(user); 
             });
         } else {
-            recentList.innerHTML = `<div class="text-center py-6 bg-black rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your Bot link to begin</p></div>`;
+            recentList.innerHTML = `<div class="text-center py-6 bg-card rounded-lg border border-gray-700"><div class="text-3xl mb-2">🔍</div><p class="text-sm text-gray-300 mono">NO CONNECTIONS YET</p><p class="text-xs text-gray-400">Share your Bot link to begin</p></div>`;
         }
        
          // Referral Tab
@@ -807,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function api(endpoint, options = {}) {
-        const BACKEND_URL = 'https://b26a21911e41.ngrok-free.app';
+        const BACKEND_URL = 'https://98a86e08ddc0.ngrok-free.app';
         
         try {
             const response = await fetch(`${BACKEND_URL}/${endpoint}`, {
@@ -858,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const badge = user.verified ? 
             `<span class="text-xs px-2 py-1 rounded-full border mono text-white status-badge-active">ACTIVE</span>` : 
             `<span class="text-xs px-2 py-1 rounded-full border mono status-badge-pending">PENDING</span>`;
-        return `<div class="flex items-center justify-between p-3 bg-black rounded-lg border border-gray-700 hover-lift">
+        return `<div class="flex items-center justify-between p-3 bg-card rounded-lg border border-gray-700 hover-lift">
                     <div class="flex items-center min-w-0">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 matrix-border" style="background: linear-gradient(135deg, #01bc8d, #00a67a);">${user.name.charAt(0) || '?'}</div>
                         <div class="ml-3 min-w-0">
@@ -972,18 +955,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     navMenu.addEventListener('click', (e) => {
-        const button = e.target.closest('.nav-button');
-        if (!button) return;
+        const button = e.target.closest('.nav-item');
+        if (!button || button.classList.contains('active')) return; // اگر روی دکمه فعال کلیک شد، کاری نکن
+
         const tabToActivate = button.dataset.tab;
         
-        navMenu.querySelectorAll('.nav-button').forEach(btn => { 
-            btn.classList.remove('text-white', 'nav-active');
-            btn.classList.add('text-gray-400', 'hover:text-white'); 
+        // غیرفعال کردن همه دکمه ها
+        navMenu.querySelectorAll('.nav-item').forEach(btn => { 
+            btn.classList.remove('active');
         });
+
+        // مخفی کردن همه تب ها
         Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
         
-        button.classList.add('text-white', 'nav-active');
-        button.classList.remove('text-gray-400', 'hover:text-white');
+        // فعال کردن دکمه کلیک شده
+        button.classList.add('active');
         tabs[tabToActivate].classList.remove('hidden');
     });
 
